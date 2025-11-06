@@ -277,10 +277,6 @@ function CyberMinerGame() {
           <p className="text-terminal-text text-sm uppercase tracking-[0.1em] font-cyber">
             Connect Neural Link • Load ICE Breaker • Execute Data Crack
           </p>
-          <div className="flex items-center justify-center gap-2 text-xs text-neon-cyan/60 font-mono">
-            <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" 
-                 style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
-          </div>
         </motion.div>
       </div>
 
