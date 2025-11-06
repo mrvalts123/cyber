@@ -527,22 +527,6 @@ export function ControlPad({
         </div>
         </div>
 
-        {/* Scan Line Effect */}
-        <motion.div
-          animate={{
-            y: ['-100%', '200%'],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="absolute inset-x-0 h-20 pointer-events-none z-20"
-          style={{
-            background: 'linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.05), transparent)',
-          }}
-        />
-      </div>
     </div>
   );
 }
