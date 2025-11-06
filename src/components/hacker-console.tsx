@@ -142,7 +142,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
 
         {/* Main Screen Container */}
         <div className="relative z-10 bg-cyber-darker rounded-lg p-4 mb-6 shadow-cyber-inset border border-cyber-border/50">
-          <div className="cyber-screen rounded-lg p-6 min-h-[450px] relative overflow-hidden scanline">
+          <div className="cyber-screen rounded-lg p-6 min-h-[450px] relative overflow-hidden">
             {/* Corner Accents */}
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon-cyan" />
             <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-neon-cyan" />
