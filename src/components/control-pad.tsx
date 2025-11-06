@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Wallet, Power, Cpu, Shield, Trophy, Zap, HelpCircle } from 'lucide-react';
+import { Wallet, Power, Cpu, Shield, Trophy, Zap, HelpCircle, ArrowRight, Box } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatAddress } from '@/lib/wallet';
 import { type NFTCartridge } from '@/lib/nft';
@@ -88,17 +88,100 @@ export function ControlPad({
         </motion.div>
       )}
 
+      {/* Main Control Section - ICE Breaker Slot + Data Crack Button */}
+      <div className="flex items-stretch gap-3">
+        {/* ICE Breaker Insertion Slot */}
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onOpenCartridgeSelector}
+          disabled={!isConnected}
+          className={`flex-1 relative overflow-hidden rounded-lg p-4 border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+            loadedCartridge 
+              ? 'border-neon-cyan bg-cyber-panel' 
+              : 'border-cyber-border/50 bg-cyber-darker hover:border-neon-purple/60'
+          }`}
+          style={{
+            boxShadow: loadedCartridge 
+              ? '0 0 25px hsl(180 100% 50% / 0.4), inset 0 0 20px hsl(180 100% 50% / 0.15)'
+              : 'inset 0 2px 8px rgba(0, 0, 0, 0.6)'
+          }}
+        >
+          {/* Cartridge Slot Effect - Makes it look like an insertion port */}
+          <div className={`absolute inset-0 pointer-events-none ${
+            loadedCartridge ? 'holographic opacity-20' : 'bg-gradient-to-b from-transparent via-cyber-border/10 to-cyber-border/20'
+          }`} />
+          
+          {/* Slot Top Edge - Makes it look like something can slide in */}
+          <div className={`absolute top-0 left-0 right-0 h-1 ${
+            loadedCartridge ? 'bg-neon-cyan' : 'bg-cyber-border/30'
+          }`} style={{
+            boxShadow: loadedCartridge ? '0 2px 10px hsl(180 100% 50% / 0.6)' : 'none'
+          }} />
+          
+          {/* Slot Guide Rails */}
+          <div className={`absolute left-3 top-0 bottom-0 w-[2px] ${
+            loadedCartridge ? 'bg-neon-cyan/40' : 'bg-cyber-border/20'
+          }`} />
+          <div className={`absolute right-3 top-0 bottom-0 w-[2px] ${
+            loadedCartridge ? 'bg-neon-cyan/40' : 'bg-cyber-border/20'
+          }`} />
+          
+          <div className="relative z-10 flex items-center gap-3">
+            {/* Cartridge Icon Container - Looks like a physical slot */}
+            <div className={`p-3 rounded-lg border-2 transition-all ${
+              loadedCartridge 
+                ? 'bg-neon-cyan/20 border-neon-cyan/60 shadow-neon-cyan' 
+                : 'bg-cyber-darker border-cyber-border/30'
+            }`}>
+              <Box className={`w-6 h-6 transition-all ${
+                loadedCartridge ? 'text-neon-cyan' : 'text-terminal-dim'
+              }`} />
+            </div>
+            
+            <div className="text-left flex-1">
+              <div className="text-[10px] text-terminal-dim uppercase tracking-[0.25em] font-cyber mb-1">
+                {loadedCartridge ? 'ICE BREAKER LOADED' : 'INSERT ICE BREAKER'}
+              </div>
+              <div className={`text-sm font-bold font-cyber tracking-wider transition-colors ${
+                loadedCartridge ? 'text-white' : 'text-terminal-dim'
+              }`}>
+                {loadedCartridge ? loadedCartridge.name : 'EMPTY SLOT'}
+              </div>
+              {loadedCartridge && (
+                <div className="text-[10px] text-neon-cyan font-mono mt-1">
+                  TOKEN #{loadedCartridge.tokenId}
+                </div>
+              )}
+            </div>
+            
+            {/* Status LED */}
+            <div className={`w-3 h-3 rounded-full transition-all ${
+              loadedCartridge ? 'bg-neon-cyan animate-pulse' : 'bg-cyber-border/50'
+            }`} style={{
+              boxShadow: loadedCartridge ? '0 0 12px hsl(180 100% 50%)' : 'none'
+            }} />
+          </div>
+          
+          {/* Click to Insert Indicator */}
+          {!loadedCartridge && isConnected && (
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-terminal-dim/40"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </motion.div>
+          )}
+        </motion.button>
 
-
-      {/* Main Control Grid */}
-      <div className="grid grid-cols-1 gap-3">
-        {/* Primary Action - Data Crack */}
+        {/* Data Crack Button */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onToggleMining}
           disabled={!isConnected || !loadedCartridge}
-          className={`relative group overflow-hidden rounded-lg p-6 border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+          className={`flex-1 relative group overflow-hidden rounded-lg p-6 border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
             isMining 
               ? 'border-neon-pink bg-neon-pink/20' 
               : 'border-neon-cyan bg-cyber-panel hover:border-neon-cyan/80'
@@ -139,58 +222,6 @@ export function ControlPad({
           <div className={`absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 ${isMining ? 'border-neon-pink' : 'border-neon-cyan'}`} />
         </motion.button>
       </div>
-
-      {/* ICE Breaker Slot */}
-      <motion.button
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-        onClick={onOpenCartridgeSelector}
-        disabled={!isConnected}
-        className={`w-full relative overflow-hidden rounded-lg p-4 border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-          loadedCartridge 
-            ? 'border-neon-cyan bg-cyber-panel' 
-            : 'border-cyber-border bg-cyber-darker hover:border-neon-purple'
-        }`}
-        style={{
-          boxShadow: loadedCartridge 
-            ? '0 0 20px hsl(180 100% 50% / 0.3), inset 0 0 15px hsl(180 100% 50% / 0.1)'
-            : 'none'
-        }}
-      >
-        {/* Holographic Overlay */}
-        {loadedCartridge && (
-          <div className="absolute inset-0 holographic opacity-30" />
-        )}
-        
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${loadedCartridge ? 'bg-neon-cyan/20' : 'bg-cyber-panel'} border ${loadedCartridge ? 'border-neon-cyan/50' : 'border-cyber-border/30'}`}>
-              <Shield className={`w-5 h-5 ${loadedCartridge ? 'text-neon-cyan' : 'text-terminal-dim'}`} />
-            </div>
-            <div className="text-left">
-              <div className="text-[10px] text-terminal-dim uppercase tracking-[0.2em] font-cyber">
-                ICE Breaker
-              </div>
-              <div className={`text-sm font-bold font-cyber tracking-wider ${loadedCartridge ? 'text-white' : 'text-terminal-dim'}`}>
-                {loadedCartridge ? loadedCartridge.name : 'NO PROGRAM LOADED'}
-              </div>
-            </div>
-          </div>
-          {loadedCartridge && (
-            <div className="text-neon-cyan text-xs font-mono bg-cyber-darker px-2 py-1 rounded border border-neon-cyan/30">
-              #{loadedCartridge.tokenId}
-            </div>
-          )}
-        </div>
-        
-        {/* Status Indicator */}
-        <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ${
-          loadedCartridge ? 'bg-neon-cyan animate-pulse' : 'bg-cyber-border'
-        }`} style={{
-          boxShadow: loadedCartridge ? '0 0 10px hsl(180 100% 50%)' : 'none'
-        }} />
-      </motion.button>
-
     </div>
   );
 }
