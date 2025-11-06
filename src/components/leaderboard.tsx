@@ -155,7 +155,7 @@ export function Leaderboard({
                       </div>
                       <div className="text-right">
                         <div className="text-xs text-white/50 uppercase tracking-wider">
-                          Minecarts
+                          $DATA
                         </div>
                         <div className="text-sm text-white font-bold">
                           {sortedEntries[currentUserRank - 1]?.minecart.toLocaleString()}
