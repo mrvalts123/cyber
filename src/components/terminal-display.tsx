@@ -183,29 +183,17 @@ export function TerminalDisplay({
                 className="space-y-2"
               >
                 {/* System Infiltration Progress */}
-                <motion.div 
-                  className="bg-cyber-panel/80 border border-neon-green/40 rounded-lg p-3 backdrop-blur-sm"
-                  animate={{ 
-                    boxShadow: [
-                      '0 0 10px hsl(150 100% 60% / 0.2)',
-                      '0 0 20px hsl(150 100% 60% / 0.4)',
-                      '0 0 10px hsl(150 100% 60% / 0.2)',
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                <div 
+                  className="bg-cyber-panel/80 border border-neon-green/40 rounded-lg p-3"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <Lock className="w-3 h-3 text-neon-green animate-pulse" />
+                    <Lock className="w-3 h-3 text-neon-green" />
                     <span className="text-xs text-neon-green uppercase tracking-wider font-cyber">
                       System Infiltration
                     </span>
-                    <motion.span
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className="text-xs text-neon-green"
-                    >
+                    <span className="text-xs text-neon-green">
                       {'>>>'}
-                    </motion.span>
+                    </span>
                   </div>
                   
                   {/* Progress Bars */}
