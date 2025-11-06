@@ -1,0 +1,387 @@
+/**
+ * TerminalDisplay Component
+ * 
+ * Cyberpunk terminal/console display for showing hacking logs and status messages.
+ * Features Matrix-style green text, animated code streams, data visualizations,
+ * and dynamic hacking effects during mining operations.
+ * 
+ * Layout Strategy:
+ * - During mining: Hacking panels (infiltration + data stream) appear at top
+ * - Chat logs are positioned below the hacking panels for visibility
+ * - When not mining: Regular chat log view only
+ */
+
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Activity, Terminal as TerminalIcon, Lock, Shield, Cpu, Database, Zap } from 'lucide-react';
+
+interface Log {
+  timestamp: number;
+  message: string;
+  type: 'info' | 'success' | 'error';
+}
+
+interface TerminalDisplayProps {
+  logs: Log[];
+  status: string;
+  isMining?: boolean;
+  miningProgress?: number;
+}
+
+// Generate random hex strings for hacking effect
+const generateHexString = (length: number) => {
+  return Array.from({ length }, () => 
+    Math.floor(Math.random() * 16).toString(16)
+  ).join('');
+};
+
+// Generate random binary string
+const generateBinaryString = (length: number) => {
+  return Array.from({ length }, () => 
+    Math.random() > 0.5 ? '1' : '0'
+  ).join('');
+};
+
+export function TerminalDisplay({ 
+  logs, 
+  status, 
+  isMining = false,
+  miningProgress = 0 
+}: TerminalDisplayProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [codeLines, setCodeLines] = useState<string[]>([]);
+  const [dataPackets, setDataPackets] = useState<Array<{ id: number; text: string; x: number }>>([]);
+
+  // Auto-scroll to bottom when new logs added
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [logs]);
+
+  // Generate animated code lines during mining
+  useEffect(() => {
+    if (!isMining) {
+      setCodeLines([]);
+      setDataPackets([]);
+      return;
+    }
+
+    const codeInterval = setInterval(() => {
+      const newLines = Array.from({ length: 3 }, () => {
+        const operations = [
+          `0x${generateHexString(8)} >>> ${generateHexString(16)}`,
+          `DECRYPT [${generateBinaryString(16)}] -> ${generateHexString(8)}`,
+          `PACKET_${Math.floor(Math.random() * 9999)} :: CAPTURED`,
+          `NODE_${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)} >> OK`,
+          `HASH: ${generateHexString(32)}`,
+          `NEURAL_LINK [${Array.from({ length: 10 }, () => Math.random() > 0.5 ? '█' : '▓').join('')}]`,
+        ];
+        return operations[Math.floor(Math.random() * operations.length)];
+      });
+      
+      setCodeLines(prev => [...newLines, ...prev].slice(0, 8));
+    }, 800);
+
+    // Generate flying data packets
+    const packetInterval = setInterval(() => {
+      const newPacket = {
+        id: Date.now(),
+        text: `[${generateHexString(4)}]`,
+        x: Math.random() * 80 + 10,
+      };
+      
+      setDataPackets(prev => [...prev, newPacket]);
+      
+      // Remove old packets after animation
+      setTimeout(() => {
+        setDataPackets(prev => prev.filter(p => p.id !== newPacket.id));
+      }, 2000);
+    }, 1200);
+
+    return () => {
+      clearInterval(codeInterval);
+      clearInterval(packetInterval);
+    };
+  }, [isMining]);
+
+  const getLogColor = (type: Log['type']) => {
+    switch (type) {
+      case 'success':
+        return 'text-neon-cyan';
+      case 'error':
+        return 'text-neon-pink';
+      default:
+        return 'text-terminal-text';
+    }
+  };
+
+  const getLogPrefix = (type: Log['type']) => {
+    switch (type) {
+      case 'success':
+        return '[✓]';
+      case 'error':
+        return '[✗]';
+      default:
+        return '[>]';
+    }
+  };
+
+  return (
+    <div className="h-full flex flex-col">
+      {/* Terminal Header */}
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-neon-cyan/30">
+        <div className="flex items-center gap-3">
+          <TerminalIcon className="w-4 h-4 text-neon-cyan" />
+          <span className="text-xs text-terminal-text uppercase tracking-[0.2em] font-cyber">
+            Data Stream
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Activity className={`w-3 h-3 ${isMining ? 'text-neon-green animate-pulse' : 'text-terminal-dim'}`} />
+          <div className={`terminal-text text-xs uppercase tracking-wider font-bold ${isMining ? 'text-neon-green' : ''}`}>
+            {status}
+          </div>
+        </div>
+      </div>
+
+      {/* Terminal Output Container */}
+      <div 
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto scrollbar-thin bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative"
+      >
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
+        
+        {/* Flying Data Packets */}
+        <AnimatePresence>
+          {dataPackets.map(packet => (
+            <motion.div
+              key={packet.id}
+              initial={{ y: -20, x: `${packet.x}%`, opacity: 0 }}
+              animate={{ y: 400, opacity: [0, 1, 1, 0] }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, ease: 'linear' }}
+              className="absolute text-neon-cyan text-xs font-mono pointer-events-none z-20"
+            >
+              {packet.text}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        
+        {/* Content Area - Hacking Panels at Top When Mining */}
+        <div className="relative z-10 space-y-3">
+          {/* Animated Hacking Overlay - At Top During Mining */}
+          <AnimatePresence>
+            {isMining && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-2"
+              >
+                {/* System Infiltration Progress */}
+                <motion.div 
+                  className="bg-cyber-panel/80 border border-neon-green/40 rounded-lg p-3 backdrop-blur-sm"
+                  animate={{ 
+                    boxShadow: [
+                      '0 0 10px hsl(150 100% 60% / 0.2)',
+                      '0 0 20px hsl(150 100% 60% / 0.4)',
+                      '0 0 10px hsl(150 100% 60% / 0.2)',
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lock className="w-3 h-3 text-neon-green animate-pulse" />
+                    <span className="text-xs text-neon-green uppercase tracking-wider font-cyber">
+                      System Infiltration
+                    </span>
+                    <motion.span
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="text-xs text-neon-green"
+                    >
+                      {'>>>'}
+                    </motion.span>
+                  </div>
+                  
+                  {/* Progress Bars */}
+                  <div className="space-y-1.5">
+                    {[
+                      { label: 'FIREWALL', icon: Shield, progress: Math.min(miningProgress * 1.2, 100) },
+                      { label: 'ENCRYPTION', icon: Lock, progress: Math.min(miningProgress * 0.9, 100) },
+                      { label: 'DATABASE', icon: Database, progress: Math.min(miningProgress * 1.1, 100) },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <item.icon className="w-3 h-3 text-neon-cyan/60" />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-0.5">
+                            <span className="text-[9px] text-terminal-text/70 uppercase tracking-wide font-mono">
+                              {item.label}
+                            </span>
+                            <span className="text-[9px] text-neon-cyan font-mono">
+                              {Math.floor(item.progress)}%
+                            </span>
+                          </div>
+                          <div className="h-1 bg-cyber-darker rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-green"
+                              initial={{ width: 0 }}
+                              animate={{ 
+                                width: `${item.progress}%`,
+                                opacity: [0.8, 1, 0.8]
+                              }}
+                              transition={{ 
+                                width: { duration: 0.3 },
+                                opacity: { duration: 1.5, repeat: Infinity }
+                              }}
+                              style={{ 
+                                boxShadow: '0 0 8px hsl(150 100% 60% / 0.6)' 
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Live Code Stream */}
+                <motion.div 
+                  className="bg-cyber-darker/60 border border-neon-cyan/30 rounded-lg p-2 backdrop-blur-sm"
+                  animate={{ 
+                    borderColor: [
+                      'hsl(180 100% 40% / 0.3)',
+                      'hsl(180 100% 40% / 0.6)',
+                      'hsl(180 100% 40% / 0.3)',
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Cpu className="w-3 h-3 text-neon-cyan" />
+                    <span className="text-[9px] text-neon-cyan uppercase tracking-wider font-cyber">
+                      Live Data Stream
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-0.5 max-h-20 overflow-hidden">
+                    <AnimatePresence initial={false}>
+                      {codeLines.map((line, i) => (
+                        <motion.div
+                          key={`${line}-${i}`}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          transition={{ duration: 0.3 }}
+                          className="text-[9px] font-mono text-neon-green/80"
+                        >
+                          <motion.span
+                            animate={{ opacity: [0.6, 1, 0.6] }}
+                            transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.1 }}
+                          >
+                            {line}
+                          </motion.span>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                {/* Data Extraction Meter */}
+                <motion.div 
+                  className="bg-gradient-to-r from-cyber-panel/70 to-cyber-panel/50 border border-neon-pink/30 rounded-lg p-2 backdrop-blur-sm"
+                  animate={{
+                    borderColor: [
+                      'hsl(330 100% 60% / 0.3)',
+                      'hsl(330 100% 60% / 0.7)',
+                      'hsl(330 100% 60% / 0.3)',
+                    ]
+                  }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-3 h-3 text-neon-pink animate-pulse" />
+                      <span className="text-[9px] text-neon-pink uppercase tracking-wider font-cyber">
+                        Data Extraction
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 8 }, (_, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-1 h-3 bg-neon-pink/30 rounded-full"
+                          animate={{
+                            height: miningProgress > (i * 12.5) ? [12, 16, 12] : 8,
+                            backgroundColor: miningProgress > (i * 12.5) 
+                              ? 'hsl(330 100% 60%)' 
+                              : 'hsl(330 100% 60% / 0.3)',
+                          }}
+                          transition={{
+                            duration: 0.6,
+                            repeat: Infinity,
+                            delay: i * 0.1,
+                          }}
+                          style={{
+                            boxShadow: miningProgress > (i * 12.5) 
+                              ? '0 0 8px hsl(330 100% 60%)' 
+                              : 'none'
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Glitch Effect at Key Milestones */}
+                {(miningProgress >= 24.5 && miningProgress <= 25.5) ||
+                 (miningProgress >= 49.5 && miningProgress <= 50.5) ||
+                 (miningProgress >= 74.5 && miningProgress <= 75.5) ||
+                 (miningProgress >= 99.5) ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.3, repeat: 2 }}
+                    className="absolute inset-0 bg-neon-cyan/10 pointer-events-none"
+                    style={{ mixBlendMode: 'screen' }}
+                  />
+                ) : null}
+              </motion.div>
+            )}
+          </AnimatePresence>
+          
+          {/* Regular Log Output - Only Show When NOT Mining */}
+          {!isMining && (
+            <div>
+              {logs.map((log, index) => (
+                <motion.div
+                  key={`${log.timestamp}-${index}`}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`terminal-text text-xs mb-1.5 font-mono ${getLogColor(log.type)}`}
+                >
+                  <span className="text-terminal-dim">
+                    [{new Date(log.timestamp).toLocaleTimeString()}]
+                  </span>
+                  {' '}
+                  <span className={getLogColor(log.type)}>
+                    {getLogPrefix(log.type)}
+                  </span>
+                  {' '}
+                  {log.message}
+                </motion.div>
+              ))}
+              
+              {/* Blinking Cursor */}
+              <div className="terminal-text text-xs inline-block terminal-cursor" />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
