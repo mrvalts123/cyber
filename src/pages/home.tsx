@@ -1,14 +1,3 @@
-/**
- * Cyber Miner Home Page
- *
- * Main page component for the Web3 data mining game.
- * Features a cyberpunk hacker terminal interface with wallet connection,
- * NFT ICE breaker system, data cracking simulation with random duration (5-60s),
- * and claim dialog for collecting $DATA rewards with 0.01 APE anonymizer fee.
- * 
- * Stats ($DATA and season credits) are persisted to localStorage per wallet address.
- */
-
 import { useState } from 'react';
 import { Web3Provider, useWeb3 } from '@/components/web3-provider';
 import { HackerConsole } from '@/components/hacker-console';
