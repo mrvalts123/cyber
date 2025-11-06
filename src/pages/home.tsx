@@ -315,9 +315,6 @@ function CyberMinerGame() {
                  style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
             <span>ApeChain: 0x3322b37...c1d34d25</span>
           </div>
-          <p className="text-xs text-terminal-dim/60 font-mono">
-            💾 Stats auto-save to your wallet address
-          </p>
         </motion.div>
       </div>
 
