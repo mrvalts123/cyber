@@ -117,7 +117,7 @@ export function Leaderboard({
                         Leaderboard
                       </h2>
                       <p className="text-xs text-white/60 mt-0.5">
-                        Top MineBoy Players
+                        TOP CYBER MINERS
                       </p>
                     </div>
                   </div>
