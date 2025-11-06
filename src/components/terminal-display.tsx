@@ -52,12 +52,13 @@ export function TerminalDisplay({
   const [codeLines, setCodeLines] = useState<string[]>([]);
   const [dataPackets, setDataPackets] = useState<Array<{ id: number; text: string; x: number }>>([]);
 
-  // Auto-scroll to bottom when new logs added
+  // Auto-scroll to bottom when new logs added (but NOT during mining)
   useEffect(() => {
-    if (scrollRef.current) {
+    // Only auto-scroll when NOT mining, so users can see the hacking panels
+    if (scrollRef.current && !isMining) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [logs]);
+  }, [logs, isMining]);
 
   // Generate animated code lines during mining
   useEffect(() => {
