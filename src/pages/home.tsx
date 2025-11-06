@@ -342,28 +342,6 @@ function CyberMinerGame() {
         onClaim={claimReward}
       />
 
-      {/* Leaderboard Modal */}
-      <Leaderboard
-        isOpen={isLeaderboardOpen}
-        onClose={() => setIsLeaderboardOpen(false)}
-        entries={entries}
-        currentAddress={address}
-      />
-
-      {/* Game Guide Modal */}
-      <GameGuide
-        isOpen={isGuideOpen}
-        onClose={() => setIsGuideOpen(false)}
-      />
-
-      {/* Wallet Selector Modal */}
-      <WalletSelector
-        isOpen={isWalletSelectorOpen}
-        onClose={() => setIsWalletSelectorOpen(false)}
-        onSelectWallet={handleWalletSelect}
-        isConnecting={isConnecting}
-      />
-
       {/* Mint Widget Dialog - Removed, using direct instant minting now */}
     </div>
   );
