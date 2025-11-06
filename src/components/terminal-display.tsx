@@ -358,11 +358,8 @@ export function TerminalDisplay({
           {!isMining && (
             <div>
               {logs.map((log, index) => (
-                <motion.div
+                <div
                   key={`${log.timestamp}-${index}`}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.2 }}
                   className={`terminal-text text-xs mb-1.5 font-mono ${getLogColor(log.type)}`}
                 >
                   <span className="text-terminal-dim">
@@ -374,7 +371,7 @@ export function TerminalDisplay({
                   </span>
                   {' '}
                   {log.message}
-                </motion.div>
+                </div>
               ))}
               
               {/* Blinking Cursor */}
