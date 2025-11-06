@@ -230,7 +230,7 @@ export function Leaderboard({
                                 <div className="flex items-center justify-end gap-1 text-yellow-400">
                                   <Trophy className="w-3 h-3" />
                                   <span className="text-xs uppercase tracking-wider">
-                                    Points
+                                    CREDS
                                   </span>
                                 </div>
                                 <div className="text-lg font-bold text-white mt-0.5">
@@ -243,7 +243,7 @@ export function Leaderboard({
                                 <div className="flex items-center justify-end gap-1 text-neon-cyan">
                                   <Zap className="w-3 h-3" />
                                   <span className="text-xs uppercase tracking-wider">
-                                    Carts
+                                    $DATA
                                   </span>
                                 </div>
                                 <div className="text-lg font-bold text-white mt-0.5">
