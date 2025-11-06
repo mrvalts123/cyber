@@ -1,13 +1,14 @@
 /**
  * ControlPad Component
  * 
- * Cyberpunk-style control interface with action panel and hacking controls.
- * Handles wallet connection, ICE breaker management, and data mining controls.
+ * Ultra-premium HD control interface with professional-grade design.
+ * Features a realistic cartridge slot and industrial start/stop button in a unified layout.
+ * Designed by 20+ year veteran designer standards.
  */
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Wallet, Power, Cpu, Shield, Trophy, Zap, HelpCircle, ArrowRight, Box } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Wallet, Power, Trophy, HelpCircle, AlertCircle, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatAddress } from '@/lib/wallet';
 import { type NFTCartridge } from '@/lib/nft';
@@ -44,183 +45,326 @@ export function ControlPad({
   onSwitchNetwork,
 }: ControlPadProps) {
   return (
-    <div className="space-y-4">
-      {/* Wrong Network Warning */}
-      {isConnected && !isCorrectNetwork && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-neon-pink/20 backdrop-blur-sm rounded-lg p-3 border-2 border-neon-pink relative overflow-hidden"
-          style={{ boxShadow: '0 0 20px hsl(330 100% 60% / 0.3)' }}
-        >
+    <div className="space-y-6">
+      {/* Wrong Network Warning - Sleek Alert */}
+      <AnimatePresence>
+        {isConnected && !isCorrectNetwork && (
           <motion.div
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="absolute inset-0 bg-neon-pink/10"
-          />
-          <div className="relative z-10 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1 }}
-              >
-                <Shield className="w-5 h-5 text-neon-pink" />
-              </motion.div>
-              <div>
-                <div className="text-xs font-bold text-neon-pink uppercase tracking-wider font-cyber">
-                  Wrong Network
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="relative rounded-2xl p-4 bg-gradient-to-r from-red-950/50 via-red-900/30 to-red-950/50 border-2 border-red-500/50"
+            style={{
+              boxShadow: '0 0 30px hsl(0 100% 50% / 0.2), inset 0 1px 20px rgba(0, 0, 0, 0.8)'
+            }}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-red-500/20">
+                  <AlertCircle className="w-5 h-5 text-red-400" />
                 </div>
-                <div className="text-[10px] text-terminal-text font-mono">
-                  Please switch to ApeChain
+                <div>
+                  <div className="text-sm font-bold text-red-400 uppercase tracking-wide">Wrong Network</div>
+                  <div className="text-xs text-red-300/70 mt-0.5">Switch to ApeChain to continue</div>
                 </div>
               </div>
-            </div>
-            {onSwitchNetwork && (
-              <Button
-                onClick={onSwitchNetwork}
-                size="sm"
-                className="bg-neon-pink/30 hover:bg-neon-pink/50 text-neon-pink border border-neon-pink/50 text-xs font-cyber uppercase"
-              >
-                Switch
-              </Button>
-            )}
-          </div>
-        </motion.div>
-      )}
-
-      {/* Main Control Section - ICE Breaker Slot + Data Crack Button */}
-      <div className="flex items-stretch gap-3">
-        {/* ICE Breaker Insertion Slot */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onOpenCartridgeSelector}
-          disabled={!isConnected}
-          className={`flex-1 relative overflow-hidden rounded-lg p-4 border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-            loadedCartridge 
-              ? 'border-neon-cyan bg-cyber-panel' 
-              : 'border-cyber-border/50 bg-cyber-darker hover:border-neon-purple/60'
-          }`}
-          style={{
-            boxShadow: loadedCartridge 
-              ? '0 0 25px hsl(180 100% 50% / 0.4), inset 0 0 20px hsl(180 100% 50% / 0.15)'
-              : 'inset 0 2px 8px rgba(0, 0, 0, 0.6)'
-          }}
-        >
-          {/* Cartridge Slot Effect - Makes it look like an insertion port */}
-          <div className={`absolute inset-0 pointer-events-none ${
-            loadedCartridge ? 'holographic opacity-20' : 'bg-gradient-to-b from-transparent via-cyber-border/10 to-cyber-border/20'
-          }`} />
-          
-          {/* Slot Top Edge - Makes it look like something can slide in */}
-          <div className={`absolute top-0 left-0 right-0 h-1 ${
-            loadedCartridge ? 'bg-neon-cyan' : 'bg-cyber-border/30'
-          }`} style={{
-            boxShadow: loadedCartridge ? '0 2px 10px hsl(180 100% 50% / 0.6)' : 'none'
-          }} />
-          
-          {/* Slot Guide Rails */}
-          <div className={`absolute left-3 top-0 bottom-0 w-[2px] ${
-            loadedCartridge ? 'bg-neon-cyan/40' : 'bg-cyber-border/20'
-          }`} />
-          <div className={`absolute right-3 top-0 bottom-0 w-[2px] ${
-            loadedCartridge ? 'bg-neon-cyan/40' : 'bg-cyber-border/20'
-          }`} />
-          
-          <div className="relative z-10 flex items-center gap-3">
-            {/* Cartridge Icon Container - Looks like a physical slot */}
-            <div className={`p-3 rounded-lg border-2 transition-all ${
-              loadedCartridge 
-                ? 'bg-neon-cyan/20 border-neon-cyan/60 shadow-neon-cyan' 
-                : 'bg-cyber-darker border-cyber-border/30'
-            }`}>
-              <Box className={`w-6 h-6 transition-all ${
-                loadedCartridge ? 'text-neon-cyan' : 'text-terminal-dim'
-              }`} />
-            </div>
-            
-            <div className="text-left flex-1">
-              <div className="text-[10px] text-terminal-dim uppercase tracking-[0.25em] font-cyber mb-1">
-                {loadedCartridge ? 'ICE BREAKER LOADED' : 'INSERT ICE BREAKER'}
-              </div>
-              <div className={`text-sm font-bold font-cyber tracking-wider transition-colors ${
-                loadedCartridge ? 'text-white' : 'text-terminal-dim'
-              }`}>
-                {loadedCartridge ? loadedCartridge.name : 'EMPTY SLOT'}
-              </div>
-              {loadedCartridge && (
-                <div className="text-[10px] text-neon-cyan font-mono mt-1">
-                  TOKEN #{loadedCartridge.tokenId}
-                </div>
+              {onSwitchNetwork && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onSwitchNetwork}
+                  className="px-4 py-2 rounded-lg bg-red-500/30 hover:bg-red-500/40 text-red-300 text-sm font-bold uppercase tracking-wide transition-all"
+                >
+                  Switch
+                </motion.button>
               )}
             </div>
-            
-            {/* Status LED */}
-            <div className={`w-3 h-3 rounded-full transition-all ${
-              loadedCartridge ? 'bg-neon-cyan animate-pulse' : 'bg-cyber-border/50'
-            }`} style={{
-              boxShadow: loadedCartridge ? '0 0 12px hsl(180 100% 50%)' : 'none'
-            }} />
-          </div>
-          
-          {/* Click to Insert Indicator */}
-          {!loadedCartridge && isConnected && (
-            <motion.div
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-terminal-dim/40"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </motion.div>
-          )}
-        </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* Data Crack Button */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onToggleMining}
-          disabled={!isConnected || !loadedCartridge}
-          className={`flex-1 relative group overflow-hidden rounded-lg p-6 border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-            isMining 
-              ? 'border-neon-pink bg-neon-pink/20' 
-              : 'border-neon-cyan bg-cyber-panel hover:border-neon-cyan/80'
-          }`}
-          style={{
-            boxShadow: isMining 
-              ? '0 0 30px hsl(330 100% 60% / 0.4), inset 0 0 20px hsl(330 100% 60% / 0.2)'
-              : isConnected && loadedCartridge
-                ? '0 0 20px hsl(180 100% 50% / 0.2)'
-                : 'none'
-          }}
-        >
-          {/* Animated Background */}
-          {isMining && (
-            <motion.div
-              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="absolute inset-0 bg-neon-pink/20 rounded-lg"
-            />
-          )}
-          
-          <div className="relative z-10 flex items-center justify-center gap-3">
-            <Power className={`w-6 h-6 ${isMining ? 'text-neon-pink' : 'text-neon-cyan'}`} />
-            <div className="text-left">
-              <div className="text-xs text-terminal-dim uppercase tracking-[0.2em] font-cyber">
-                Primary Action
-              </div>
-              <div className={`text-2xl font-bold font-cyber tracking-wider ${
-                isMining ? 'text-neon-pink' : 'text-neon-cyan'
-              }`}>
-                {isMining ? 'ABORT CRACK' : 'DATA CRACK'}
-              </div>
+      {/* MAIN CONTROL UNIT - Professional HD Design */}
+      <div 
+        className="relative p-8 rounded-3xl bg-gradient-to-br from-cyber-darker via-cyber-dark to-cyber-panel"
+        style={{
+          boxShadow: `
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            0 0 80px rgba(0, 255, 255, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03),
+            inset 0 -1px 20px rgba(0, 0, 0, 0.9)
+          `
+        }}
+      >
+        {/* Top Status Bar */}
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.6, 1, 0.6]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className={`w-2 h-2 rounded-full ${loadedCartridge ? 'bg-neon-cyan' : 'bg-cyber-border'}`}
+                style={{
+                  boxShadow: loadedCartridge ? '0 0 10px hsl(180 100% 50%)' : 'none'
+                }}
+              />
+              <span className="text-[10px] text-terminal-dim/60 uppercase tracking-[0.2em] font-mono">
+                {loadedCartridge ? 'SYSTEM READY' : 'STANDBY MODE'}
+              </span>
             </div>
           </div>
+          <div className="text-[9px] text-terminal-dim/40 uppercase tracking-[0.25em] font-mono">
+            NEURAL INTERFACE v2.0
+          </div>
+        </div>
+
+        {/* PRIMARY CONTROL ROW - Insert Slot + Start Button */}
+        <div className="grid grid-cols-[1.5fr,1fr] gap-6">
           
-          {/* Corner Accents */}
-          <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 ${isMining ? 'border-neon-pink' : 'border-neon-cyan'}`} />
-          <div className={`absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 ${isMining ? 'border-neon-pink' : 'border-neon-cyan'}`} />
-        </motion.button>
+          {/* NFT CARTRIDGE SLOT - Premium DVD-Style Slot */}
+          <button
+            onClick={onOpenCartridgeSelector}
+            disabled={!isConnected}
+            className="relative group disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <div 
+              className={`relative rounded-2xl overflow-hidden transition-all duration-500 ${
+                loadedCartridge 
+                  ? 'bg-gradient-to-br from-cyan-950/40 via-cyan-900/20 to-cyan-950/40' 
+                  : 'bg-gradient-to-br from-gray-950/60 via-gray-900/40 to-gray-950/60 group-hover:from-purple-950/30 group-hover:via-purple-900/20 group-hover:to-purple-950/30'
+              }`}
+              style={{
+                boxShadow: loadedCartridge 
+                  ? `
+                      0 0 40px hsl(180 100% 50% / 0.2),
+                      0 10px 30px rgba(0, 0, 0, 0.7),
+                      inset 0 2px 20px rgba(0, 0, 0, 0.9),
+                      inset 0 -2px 15px hsl(180 100% 50% / 0.15)
+                    `
+                  : `
+                      0 8px 25px rgba(0, 0, 0, 0.7),
+                      inset 0 2px 20px rgba(0, 0, 0, 0.9),
+                      inset 0 -2px 8px rgba(255, 255, 255, 0.02)
+                    `
+              }}
+            >
+              {/* Slot Opening - DVD/Cartridge Style */}
+              <div className="p-6">
+                {/* Slot Guide - Horizontal Opening */}
+                <div 
+                  className="relative h-20 rounded-lg overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.9))',
+                    boxShadow: `
+                      inset 0 6px 20px rgba(0, 0, 0, 1),
+                      inset 0 -3px 15px rgba(0, 0, 0, 0.8),
+                      ${loadedCartridge ? 'inset 0 0 40px hsl(180 100% 50% / 0.2)' : ''}
+                    `
+                  }}
+                >
+                  {/* Top Guide Rail */}
+                  <div className="absolute top-2 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-cyber-border/40 to-transparent" />
+                  
+                  {/* Bottom Guide Rail */}
+                  <div className="absolute bottom-2 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-cyber-border/40 to-transparent" />
+                  
+                  {/* Cartridge Content */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {loadedCartridge ? (
+                      /* Loaded Cartridge Display */
+                      <motion.div
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        className="flex items-center gap-4 px-6"
+                      >
+                        <motion.div
+                          animate={{
+                            boxShadow: [
+                              '0 0 20px hsl(180 100% 50% / 0.5)',
+                              '0 0 30px hsl(180 100% 50% / 0.7)',
+                              '0 0 20px hsl(180 100% 50% / 0.5)',
+                            ]
+                          }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="p-3 rounded-lg bg-neon-cyan/20 border-2 border-neon-cyan"
+                        >
+                          <Shield className="w-6 h-6 text-neon-cyan" />
+                        </motion.div>
+                        <div className="text-left">
+                          <div className="text-xs text-neon-cyan uppercase tracking-wider font-bold mb-1">
+                            ✓ NFT LOADED
+                          </div>
+                          <div className="text-sm text-white font-bold tracking-wide">
+                            {loadedCartridge.name}
+                          </div>
+                          <div className="text-xs text-neon-cyan/70 font-mono mt-0.5">
+                            TOKEN #{loadedCartridge.tokenId}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      /* Empty Slot */
+                      <div className="flex items-center gap-3 text-terminal-dim/60 group-hover:text-purple-400/80 transition-colors">
+                        <motion.div
+                          animate={{ x: [0, 8, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                          className="text-2xl"
+                        >
+                          ▶
+                        </motion.div>
+                        <div className="text-left">
+                          <div className="text-xs uppercase tracking-wider font-bold mb-0.5">
+                            INSERT NFT
+                          </div>
+                          <div className="text-[10px] uppercase tracking-widest opacity-60">
+                            Click to Select
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Holographic Scan Effect */}
+                  {loadedCartridge && (
+                    <motion.div
+                      animate={{
+                        x: ['-100%', '200%']
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
+                      className="absolute inset-y-0 w-20"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent, hsl(180 100% 50% / 0.3), transparent)'
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Bottom Label */}
+                <div className="mt-3 text-center">
+                  <div className="text-[9px] text-terminal-dim/50 uppercase tracking-[0.15em] font-mono">
+                    {loadedCartridge 
+                      ? 'Authentication Verified' 
+                      : isConnected 
+                        ? 'Select NFT From Wallet'
+                        : 'Connect Wallet First'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          {/* START / STOP BUTTON - Industrial Power Button */}
+          <motion.button
+            whileHover={isConnected && loadedCartridge ? { scale: 1.03 } : {}}
+            whileTap={isConnected && loadedCartridge ? { scale: 0.97 } : {}}
+            onClick={onToggleMining}
+            disabled={!isConnected || !loadedCartridge}
+            className="relative disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <div 
+              className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
+                isMining 
+                  ? 'bg-gradient-to-br from-red-950/60 via-red-900/40 to-red-950/60' 
+                  : 'bg-gradient-to-br from-green-950/60 via-green-900/40 to-green-950/60'
+              }`}
+              style={{
+                boxShadow: isMining 
+                  ? `
+                      0 0 60px hsl(0 100% 50% / 0.3),
+                      0 15px 40px rgba(0, 0, 0, 0.8),
+                      inset 0 2px 25px rgba(0, 0, 0, 0.9),
+                      inset 0 -3px 20px hsl(0 100% 50% / 0.2)
+                    `
+                  : isConnected && loadedCartridge
+                    ? `
+                        0 0 60px hsl(120 100% 50% / 0.3),
+                        0 15px 40px rgba(0, 0, 0, 0.8),
+                        inset 0 2px 25px rgba(0, 0, 0, 0.9),
+                        inset 0 -3px 20px hsl(120 100% 50% / 0.2)
+                      `
+                    : `
+                        0 10px 30px rgba(0, 0, 0, 0.7),
+                        inset 0 2px 25px rgba(0, 0, 0, 0.9)
+                      `
+              }}
+            >
+              {/* Pulsing Background Effect */}
+              <AnimatePresence>
+                {(isConnected && loadedCartridge) && (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ 
+                      scale: [1, 1.3, 1.6],
+                      opacity: [0.4, 0.2, 0]
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className={`absolute inset-0 rounded-2xl ${
+                      isMining ? 'bg-red-500' : 'bg-green-500'
+                    }`}
+                  />
+                )}
+              </AnimatePresence>
+
+              <div className="relative p-6 flex flex-col items-center justify-center h-full">
+                {/* Power Icon */}
+                <motion.div
+                  animate={isMining || (isConnected && loadedCartridge) ? {
+                    scale: [1, 1.1, 1],
+                  } : {}}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className={`mb-3 p-4 rounded-full transition-all ${
+                    isMining 
+                      ? 'bg-red-500/30 border-3 border-red-400' 
+                      : 'bg-green-500/30 border-3 border-green-400'
+                  }`}
+                  style={{
+                    boxShadow: isMining 
+                      ? `
+                          0 0 30px hsl(0 100% 50% / 0.7),
+                          inset 0 2px 15px rgba(0, 0, 0, 0.8),
+                          inset 0 -2px 10px hsl(0 100% 50% / 0.4)
+                        `
+                      : isConnected && loadedCartridge
+                        ? `
+                            0 0 30px hsl(120 100% 50% / 0.7),
+                            inset 0 2px 15px rgba(0, 0, 0, 0.8),
+                            inset 0 -2px 10px hsl(120 100% 50% / 0.4)
+                          `
+                        : 'inset 0 2px 15px rgba(0, 0, 0, 0.9)'
+                  }}
+                >
+                  <Power className={`w-10 h-10 ${
+                    isMining ? 'text-red-300' : 'text-green-300'
+                  }`} />
+                </motion.div>
+                
+                {/* Button Label */}
+                <div className="text-center">
+                  <div 
+                    className={`text-2xl font-black uppercase tracking-wider ${
+                      isMining ? 'text-red-300' : 'text-green-300'
+                    }`}
+                    style={{
+                      textShadow: isMining 
+                        ? '0 0 20px hsl(0 100% 50%), 0 0 40px hsl(0 100% 50% / 0.5)'
+                        : '0 0 20px hsl(120 100% 50%), 0 0 40px hsl(120 100% 50% / 0.5)'
+                    }}
+                  >
+                    {isMining ? 'STOP' : 'START'}
+                  </div>
+                  <div className={`text-[9px] mt-1.5 uppercase tracking-[0.2em] ${
+                    isMining ? 'text-red-400/70' : 'text-green-400/70'
+                  }`}>
+                    {isMining ? 'Abort Crack' : 'Data Crack'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.button>
+        </div>
       </div>
     </div>
   );
