@@ -1,4 +1,15 @@
-import { useState } from 'react';
+/**
+ * Cyber Miner Home Page
+ *
+ * Main page component for the Web3 data mining game.
+ * Features a cyberpunk hacker terminal interface with wallet connection,
+ * NFT ICE breaker system, data cracking simulation with random duration (5-60s),
+ * and claim dialog for collecting $DATA rewards with 0.01 APE anonymizer fee.
+ * 
+ * Stats ($DATA and season credits) are persisted to localStorage per wallet address.
+ */
+
+import { useState, useEffect } from 'react';
 import { Web3Provider, useWeb3 } from '@/components/web3-provider';
 import { HackerConsole } from '@/components/hacker-console';
 import { TerminalDisplay } from '@/components/terminal-display';
@@ -22,7 +33,14 @@ function CyberMinerGame() {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isWalletSelectorOpen, setIsWalletSelectorOpen] = useState(false);
-  // Removed isMintWidgetOpen state - using direct instant minting
+  const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 });
+  
+  // Get window size for particles on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+  }, []);
   
   // ICE Breaker system (NFT cartridges)
   const {
@@ -48,7 +66,6 @@ function CyberMinerGame() {
     startMining,
     stopMining,
     claimReward,
-    mintNFT,
   } = useMining({
     isConnected,
     address,
@@ -153,12 +170,12 @@ function CyberMinerGame() {
               i % 3 === 0 ? 'bg-neon-cyan' : i % 3 === 1 ? 'bg-neon-pink' : 'bg-neon-green'
             }`}
             initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * windowSize.width,
+              y: Math.random() * windowSize.height,
               opacity: 0,
             }}
             animate={{
-              y: [null, Math.random() * window.innerHeight],
+              y: [null, Math.random() * windowSize.height],
               opacity: [0, 1, 0],
             }}
             transition={{
@@ -290,7 +307,17 @@ function CyberMinerGame() {
           <p className="text-terminal-text text-sm uppercase tracking-[0.1em] font-cyber">
             Connect Neural Link • Load ICE Breaker • Execute Data Crack
           </p>
+          <p className="text-xs text-terminal-dim font-mono">
+            Duration: 5-60s random • Fee: 0.01 APE anonymizer cost
+          </p>
           <div className="flex items-center justify-center gap-2 text-xs text-neon-cyan/60 font-mono">
+            <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" 
+                 style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
+            <span>ApeChain: 0x3322b37...c1d34d25</span>
+          </div>
+          <p className="text-xs text-terminal-dim/60 font-mono">
+            💾 Stats auto-save to your wallet address
+          </p>
         </motion.div>
       </div>
 
