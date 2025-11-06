@@ -307,9 +307,6 @@ function CyberMinerGame() {
           <p className="text-terminal-text text-sm uppercase tracking-[0.1em] font-cyber">
             Connect Neural Link • Load ICE Breaker • Execute Data Crack
           </p>
-          <p className="text-xs text-terminal-dim font-mono">
-            Duration: 5-60s random • Fee: 0.01 APE anonymizer cost
-          </p>
           <div className="flex items-center justify-center gap-2 text-xs text-neon-cyan/60 font-mono">
             <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" 
                  style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
@@ -337,6 +334,28 @@ function CyberMinerGame() {
         pendingRarity={pendingRarity}
         isClaiming={isClaiming}
         onClaim={claimReward}
+      />
+
+            {/* Leaderboard Modal */}
+      <Leaderboard
+        isOpen={isLeaderboardOpen}
+        onClose={() => setIsLeaderboardOpen(false)}
+        entries={entries}
+        currentAddress={address}
+      />
+
+      {/* Game Guide Modal */}
+      <GameGuide
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+      />
+
+      {/* Wallet Selector Modal */}
+      <WalletSelector
+        isOpen={isWalletSelectorOpen}
+        onClose={() => setIsWalletSelectorOpen(false)}
+        onSelectWallet={handleWalletSelect}
+        isConnecting={isConnecting}
       />
 
       {/* Mint Widget Dialog - Removed, using direct instant minting now */}
