@@ -1,16 +1,3 @@
-/**
- * GameGuide Component
- * 
- * Premium redesigned guide with 3D effects, interactive cards, and engaging animations.
- * Features:
- * - 3D card hover effects
- * - Animated gradient backgrounds
- * - Interactive progress bars
- * - Particle effects
- * - Smooth transitions
- * - Visual hierarchy improvements
- */
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, BookOpen, Shield, Zap, Trophy, Flame, AlertTriangle, Sparkles, Target, TrendingUp, ChevronRight, Star, Award, Gauge, Lock } from 'lucide-react';
@@ -225,7 +212,7 @@ export function GameGuide({ isOpen, onClose }: GameGuideProps) {
                           </div>
                           
                           <p className="text-terminal-text leading-relaxed mb-6 text-lg">
-                            Cyber Miner is a Web3 cyberpunk mining game where you break through ICE (Intrusion Countermeasures Electronics) 
+                            Cyber Miner is a Web3 mining game on APECHAIN where you break through ICE (Intrusion Countermeasures Electronics) 
                             to extract valuable $DATA from the neural network. Connect your wallet, load an ICE Breaker NFT, and start cracking!
                           </p>
                           
@@ -754,7 +741,7 @@ export function GameGuide({ isOpen, onClose }: GameGuideProps) {
                 <div className="flex items-center justify-between">
                   <div className="text-xs text-terminal-dim font-mono flex items-center gap-2">
                     <Shield className="w-3 h-3" />
-                    <span>Contract: 0x3322b37...c1d34d25 • ApeChain (33139)</span>
+                    <span>Contract: 0xXXXX...XXXX • ApeChain (33139)</span>
                   </div>
                   <Button
                     onClick={onClose}
