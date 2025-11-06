@@ -151,25 +151,6 @@ export function TerminalDisplay({
         ref={scrollRef}
         className="flex-1 overflow-y-auto scrollbar-thin bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative"
       >
-        {/* Grid Pattern Overlay */}
-        <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
-        
-        {/* Flying Data Packets */}
-        <AnimatePresence>
-          {dataPackets.map(packet => (
-            <motion.div
-              key={packet.id}
-              initial={{ y: -20, x: `${packet.x}%`, opacity: 0 }}
-              animate={{ y: 400, opacity: [0, 1, 1, 0] }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 2, ease: 'linear' }}
-              className="absolute text-neon-cyan text-xs font-mono pointer-events-none z-20"
-            >
-              {packet.text}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-        
         {/* Content Area - Hacking Panels at Top When Mining */}
         <div className="relative z-10 space-y-3">
           {/* Animated Hacking Overlay - At Top During Mining */}
