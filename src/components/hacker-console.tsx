@@ -54,7 +54,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                 </h1>
                 <div className="text-xs text-terminal-text uppercase tracking-widest flex items-center gap-2">
                   <Zap className="w-3 h-3" />
-                  <span>Neural Network v3.0</span>
+                  <span>Neural Network v1.0</span>
                 </div>
               </div>
             </div>
@@ -87,7 +87,6 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   title="Leaderboard"
                 >
                   <Trophy className="w-3 h-3 text-neon-green" />
-                  <span className="text-xs text-neon-green uppercase tracking-wider">Ranks</span>
                 </motion.button>
               )}
 
@@ -101,7 +100,6 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   title="Game Guide"
                 >
                   <HelpCircle className="w-3 h-3 text-neon-pink" />
-                  <span className="text-xs text-neon-pink uppercase tracking-wider">Guide</span>
                 </motion.button>
               )}
               
