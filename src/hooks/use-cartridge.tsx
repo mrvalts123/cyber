@@ -31,6 +31,9 @@ export function useCartridge({ address, isConnected }: UseCartridgeOptions) {
     }
 
     setIsLoading(true);
+    
+    // Show scanning message for large collections
+    const scanToast = toast.loading('🔍 Scanning collection... This may take a moment for large collections');
 
     try {
       // Check if user has any NFTs first
@@ -39,26 +42,30 @@ export function useCartridge({ address, isConnected }: UseCartridgeOptions) {
 
       if (!ownsNFT) {
         setCartridges([]);
+        toast.dismiss(scanToast);
         toast.info('No ICE breakers found in your wallet');
         return;
       }
 
-      // Fetch all NFTs (limited to 5 max)
+      // Fetch all NFTs (limited to 5 max for display)
       const nfts = await getUserNFTs(address);
       
-      // Enforce 5 ICE breaker limit per wallet
+      // Enforce 5 ICE breaker limit per wallet for gameplay
       const limitedNfts = nfts.slice(0, 5);
       setCartridges(limitedNfts);
 
+      toast.dismiss(scanToast);
+      
       if (limitedNfts.length > 0) {
-        toast.success(`Found ${limitedNfts.length} ICE breaker${limitedNfts.length > 1 ? 's' : ''}!`);
+        toast.success(`✅ Found ${limitedNfts.length} ICE breaker${limitedNfts.length > 1 ? 's' : ''}!`);
         
         if (nfts.length > 5) {
-          toast.info('Maximum 5 ICE breakers allowed per wallet');
+          toast.info(`You own ${nfts.length} tokens! Showing first 5 for gameplay`);
         }
       }
     } catch (error) {
       console.error('Error fetching ICE breakers:', error);
+      toast.dismiss(scanToast);
       toast.error('Failed to load ICE breakers');
       setCartridges([]);
     } finally {
