@@ -61,6 +61,23 @@ export function HackerConsole({ children, controls, isConnected = false, address
             
             {/* Status Indicators */}
             <div className="flex items-center gap-3">
+              {/* X/Twitter Link */}
+              <motion.a
+                href="https://x.com/cyberminerAPE"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-1 rounded border border-neon-cyan/50 bg-terminal-bg/30 hover:bg-neon-cyan/10 transition-colors group"
+                title="Follow on X/Twitter"
+              >
+                <svg className="w-3 h-3 text-neon-cyan group-hover:text-neon-cyan transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span className="text-xs text-neon-cyan uppercase tracking-wider group-hover:text-neon-cyan transition-colors">Follow</span>
+              </motion.a>
+
+              
               {/* RANKS Button */}
               {onOpenLeaderboard && (
                 <motion.button
