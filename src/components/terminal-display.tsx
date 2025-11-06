@@ -216,19 +216,11 @@ export function TerminalDisplay({
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Live Code Stream */}
-                <motion.div 
-                  className="bg-cyber-darker/60 border border-neon-cyan/30 rounded-lg p-2 backdrop-blur-sm"
-                  animate={{ 
-                    borderColor: [
-                      'hsl(180 100% 40% / 0.3)',
-                      'hsl(180 100% 40% / 0.6)',
-                      'hsl(180 100% 40% / 0.3)',
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                <div 
+                  className="bg-cyber-darker/60 border border-neon-cyan/30 rounded-lg p-2"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Cpu className="w-3 h-3 text-neon-cyan" />
@@ -238,27 +230,16 @@ export function TerminalDisplay({
                   </div>
                   
                   <div className="space-y-0.5 max-h-20 overflow-hidden">
-                    <AnimatePresence initial={false}>
-                      {codeLines.map((line, i) => (
-                        <motion.div
-                          key={`${line}-${i}`}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: 20 }}
-                          transition={{ duration: 0.3 }}
-                          className="text-[9px] font-mono text-neon-green/80"
-                        >
-                          <motion.span
-                            animate={{ opacity: [0.6, 1, 0.6] }}
-                            transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.1 }}
-                          >
-                            {line}
-                          </motion.span>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
+                    {codeLines.map((line, i) => (
+                      <div
+                        key={`${line}-${i}`}
+                        className="text-[9px] font-mono text-neon-green/80"
+                      >
+                        {line}
+                      </div>
+                    ))}
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Data Extraction Meter */}
                 <motion.div 
