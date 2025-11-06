@@ -317,8 +317,8 @@ export function ControlPad({
                   transition={{ duration: 1.5, repeat: Infinity }}
                   className={`mb-3 p-4 rounded-full transition-all ${
                     isMining 
-                      ? 'bg-red-500/30 border-3 border-red-400' 
-                      : 'bg-green-500/30 border-3 border-green-400'
+                      ? 'bg-red-500/30 border-2 border-red-400' 
+                      : 'bg-green-500/30 border-2 border-green-400'
                   }`}
                   style={{
                     boxShadow: isMining 
