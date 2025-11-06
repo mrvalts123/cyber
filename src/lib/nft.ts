@@ -12,7 +12,8 @@
 import { isMetaMaskInstalled } from './wallet';
 
 // ApeChain NFT Contract Address
-export const NFT_CONTRACT_ADDRESS = '0x3322b37349aefd6f50f7909b641f2177c1d34d25';
+// TODO: Set this to your new NFT contract address when ready
+export const NFT_CONTRACT_ADDRESS = ''; // Empty until new NFT contract is deployed
 
 export interface NFTCartridge {
   tokenId: string;

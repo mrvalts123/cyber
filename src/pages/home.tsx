@@ -18,6 +18,8 @@ import { ControlPad } from '@/components/control-pad';
 import { CartridgeSelector } from '@/components/cartridge-selector';
 import { ClaimDialog } from '@/components/claim-dialog';
 import { Leaderboard } from '@/components/leaderboard';
+import { GameGuide } from '@/components/game-guide';
+import { WalletSelector } from '@/components/wallet-selector';
 // MintWidgetDialog removed - using direct instant minting now
 import { useMining } from '@/hooks/use-mining';
 import { useCartridge } from '@/hooks/use-cartridge';
@@ -26,9 +28,11 @@ import { motion } from 'framer-motion';
 import { Lock, Unlock } from 'lucide-react';
 
 function CyberMinerGame() {
-  const { address, isConnected, isConnecting, isCorrectNetwork, connect, switchNetwork } = useWeb3();
+  const { address, isConnected, isConnecting, isCorrectNetwork, connect, disconnect, switchNetwork } = useWeb3();
   const [isCartridgeSelectorOpen, setIsCartridgeSelectorOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isWalletSelectorOpen, setIsWalletSelectorOpen] = useState(false);
   // Removed isMintWidgetOpen state - using direct instant minting
   
   // ICE Breaker system (NFT cartridges)
@@ -69,6 +73,18 @@ function CyberMinerGame() {
   const handleOpenLeaderboard = () => {
     refreshLeaderboard();
     setIsLeaderboardOpen(true);
+  };
+
+  // Handle wallet selection
+  const handleWalletSelect = async (walletId: string) => {
+    if (walletId === 'metamask') {
+      await connect();
+      setIsWalletSelectorOpen(false);
+    } else {
+      // For other wallets, show info that they're not yet supported
+      console.log('Wallet not yet supported:', walletId);
+      // You can add toast notification here
+    }
   };
 
   return (
@@ -168,6 +184,13 @@ function CyberMinerGame() {
       {/* Main Hacker Console */}
       <div className="relative z-10 w-full">
         <HackerConsole
+          isConnected={isConnected}
+          address={address}
+          isConnecting={isConnecting}
+          onConnect={() => setIsWalletSelectorOpen(true)}
+          onDisconnect={disconnect}
+          onOpenLeaderboard={handleOpenLeaderboard}
+          onOpenGuide={() => setIsGuideOpen(true)}
           controls={
             <ControlPad
               isConnected={isConnected}
@@ -177,10 +200,11 @@ function CyberMinerGame() {
               loadedCartridge={loadedCartridge}
               isCorrectNetwork={isCorrectNetwork}
               onConnect={connect}
+              onDisconnect={disconnect}
               onToggleMining={isMining ? stopMining : startMining}
-              onMint={mintNFT}
               onOpenCartridgeSelector={() => setIsCartridgeSelectorOpen(true)}
               onOpenLeaderboard={handleOpenLeaderboard}
+              onOpenGuide={() => setIsGuideOpen(true)}
               onSwitchNetwork={switchNetwork}
             />
           }
@@ -277,6 +301,17 @@ function CyberMinerGame() {
           <p className="text-terminal-text text-sm uppercase tracking-[0.1em] font-cyber">
             Connect Neural Link • Load ICE Breaker • Execute Data Crack
           </p>
+          <p className="text-xs text-terminal-dim font-mono">
+            Duration: 5-60s random • Fee: 0.01 APE anonymizer cost
+          </p>
+          <div className="flex items-center justify-center gap-2 text-xs text-neon-cyan/60 font-mono">
+            <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" 
+                 style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
+            <span>ApeChain: 0x3322b37...c1d34d25</span>
+          </div>
+          <p className="text-xs text-terminal-dim/60 font-mono">
+            💾 Stats auto-save to your wallet address
+          </p>
         </motion.div>
       </div>
 
@@ -307,6 +342,20 @@ function CyberMinerGame() {
         onClose={() => setIsLeaderboardOpen(false)}
         entries={entries}
         currentAddress={address}
+      />
+
+      {/* Game Guide Modal */}
+      <GameGuide
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+      />
+
+      {/* Wallet Selector Modal */}
+      <WalletSelector
+        isOpen={isWalletSelectorOpen}
+        onClose={() => setIsWalletSelectorOpen(false)}
+        onSelectWallet={handleWalletSelect}
+        isConnecting={isConnecting}
       />
 
       {/* Mint Widget Dialog - Removed, using direct instant minting now */}

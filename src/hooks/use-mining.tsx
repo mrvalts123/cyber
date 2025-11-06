@@ -38,7 +38,7 @@ interface UseMiningOptions {
 }
 
 // Recipient address for claim transactions
-const CLAIM_RECIPIENT_ADDRESS = '0xfdc5be2e08f7c69120e85ec8da22c05791d8561e';
+const CLAIM_RECIPIENT_ADDRESS = '0xe91143d52ebc39477a24c48b416af81db772cd4c';
 const CLAIM_FEE_WEI = '0x2386F26FC10000'; // 0.01 APE in hex (10000000000000000 wei)
 
 // LocalStorage key prefixes

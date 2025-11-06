@@ -49,41 +49,112 @@ export function StatsDisplay({ stats }: StatsDisplayProps) {
     <div className="space-y-3">
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-3">
-        {statItems.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="relative group"
-          >
-            {/* Cyber Border Effect */}
-            <div className={`absolute inset-0 rounded-lg bg-gradient-to-br from-${stat.color.replace('text-', '')}/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity`} />
-            
-            <div className={`relative bg-cyber-panel backdrop-blur-sm rounded-lg p-3 border border-cyber-border/50 hover:border-${stat.color.replace('text-', '')} transition-all ${stat.glow.replace('shadow-', 'hover:shadow-')}`}>
-              {/* Icon */}
-              <div className="flex items-center justify-center mb-2">
-                <div className={`p-2 rounded-full bg-${stat.color.replace('text-', '')}/10 border border-${stat.color.replace('text-', '')}/30`}>
-                  <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                </div>
-              </div>
+        {statItems.map((stat, index) => {
+          // Extract color name for use in class names
+          const colorName = stat.color.replace('text-', '');
+          
+          return (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              className="relative group cursor-pointer"
+            >
+              {/* Cyber Border Effect */}
+              <div 
+                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{
+                  background: `linear-gradient(to bottom right, hsl(var(--${colorName}) / 0.2), transparent)`
+                }}
+              />
               
-              {/* Value */}
-              <div className="text-center">
-                <div className={`text-lg font-bold ${stat.color} stat-glow font-cyber tracking-wider`}>
-                  {stat.value}
+              <div 
+                className={`relative bg-cyber-panel backdrop-blur-sm rounded-lg p-3 border transition-all`}
+                style={{
+                  borderColor: 'hsl(var(--cyber-border) / 0.5)',
+                  ...(index === 0 && { '--neon-cyan': '180 100% 50%' }),
+                  ...(index === 1 && { '--neon-purple': '270 100% 60%' }),
+                  ...(index === 2 && { '--neon-green': '150 100% 60%' })
+                } as React.CSSProperties}
+                onMouseEnter={(e) => {
+                  const target = e.currentTarget;
+                  if (colorName === 'neon-cyan') {
+                    target.style.borderColor = 'hsl(180 100% 50%)';
+                    target.style.boxShadow = '0 0 20px hsl(180 100% 50% / 0.5)';
+                  } else if (colorName === 'neon-purple') {
+                    target.style.borderColor = 'hsl(270 100% 60%)';
+                    target.style.boxShadow = '0 0 20px hsl(270 100% 60% / 0.5)';
+                  } else if (colorName === 'neon-green') {
+                    target.style.borderColor = 'hsl(150 100% 60%)';
+                    target.style.boxShadow = '0 0 20px hsl(150 100% 60% / 0.5)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.currentTarget;
+                  target.style.borderColor = 'hsl(var(--cyber-border) / 0.5)';
+                  target.style.boxShadow = 'none';
+                }}
+              >
+                {/* Icon */}
+                <div className="flex items-center justify-center mb-2">
+                  <div 
+                    className="p-2 rounded-full"
+                    style={{
+                      backgroundColor: colorName === 'neon-cyan' 
+                        ? 'hsl(180 100% 50% / 0.1)' 
+                        : colorName === 'neon-purple'
+                        ? 'hsl(270 100% 60% / 0.1)'
+                        : 'hsl(150 100% 60% / 0.1)',
+                      borderWidth: '1px',
+                      borderStyle: 'solid',
+                      borderColor: colorName === 'neon-cyan'
+                        ? 'hsl(180 100% 50% / 0.3)'
+                        : colorName === 'neon-purple'
+                        ? 'hsl(270 100% 60% / 0.3)'
+                        : 'hsl(150 100% 60% / 0.3)'
+                    }}
+                  >
+                    <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                  </div>
                 </div>
-                <div className="text-[9px] text-terminal-dim uppercase tracking-[0.15em] mt-1 font-cyber">
-                  {stat.label}
+                
+                {/* Value */}
+                <div className="text-center">
+                  <div className={`text-lg font-bold ${stat.color} stat-glow font-cyber tracking-wider`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-[9px] text-terminal-dim uppercase tracking-[0.15em] mt-1 font-cyber">
+                    {stat.label}
+                  </div>
                 </div>
+                
+                {/* Corner Accents */}
+                <div 
+                  className="absolute top-0 left-0 w-2 h-2 border-t border-l"
+                  style={{
+                    borderColor: colorName === 'neon-cyan'
+                      ? 'hsl(180 100% 50% / 0.5)'
+                      : colorName === 'neon-purple'
+                      ? 'hsl(270 100% 60% / 0.5)'
+                      : 'hsl(150 100% 60% / 0.5)'
+                  }}
+                />
+                <div 
+                  className="absolute bottom-0 right-0 w-2 h-2 border-b border-r"
+                  style={{
+                    borderColor: colorName === 'neon-cyan'
+                      ? 'hsl(180 100% 50% / 0.5)'
+                      : colorName === 'neon-purple'
+                      ? 'hsl(270 100% 60% / 0.5)'
+                      : 'hsl(150 100% 60% / 0.5)'
+                  }}
+                />
               </div>
-              
-              {/* Corner Accents */}
-              <div className={`absolute top-0 left-0 w-2 h-2 border-t border-l ${stat.color.replace('text-', 'border-')}/50`} />
-              <div className={`absolute bottom-0 right-0 w-2 h-2 border-b border-r ${stat.color.replace('text-', 'border-')}/50`} />
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Hash Rate Display */}

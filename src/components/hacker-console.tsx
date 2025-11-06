@@ -7,14 +7,23 @@
 
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Terminal, Zap, Shield } from 'lucide-react';
+import { Terminal, Zap, Shield, LogOut, Wallet, Trophy, HelpCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { formatAddress } from '@/lib/wallet';
 
 interface HackerConsoleProps {
   children: ReactNode;
   controls: ReactNode;
+  isConnected?: boolean;
+  address?: string;
+  isConnecting?: boolean;
+  onConnect?: () => void;
+  onDisconnect?: () => void;
+  onOpenLeaderboard?: () => void;
+  onOpenGuide?: () => void;
 }
 
-export function HackerConsole({ children, controls }: HackerConsoleProps) {
+export function HackerConsole({ children, controls, isConnected = false, address = '', isConnecting = false, onConnect, onDisconnect, onOpenLeaderboard, onOpenGuide }: HackerConsoleProps) {
   return (
     <motion.div
       initial={{ scale: 0.95, opacity: 0 }}
@@ -51,7 +60,7 @@ export function HackerConsole({ children, controls }: HackerConsoleProps) {
             </div>
             
             {/* Status Indicators */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <motion.div
                 animate={{ opacity: [1, 0.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -60,7 +69,68 @@ export function HackerConsole({ children, controls }: HackerConsoleProps) {
                 <Shield className="w-3 h-3 text-neon-green" />
                 <span className="text-xs text-neon-green uppercase tracking-wider">Secure</span>
               </motion.div>
-              <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
+
+              {/* RANKS Button */}
+              {onOpenLeaderboard && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onOpenLeaderboard}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded border border-neon-green/50 bg-terminal-bg/30 hover:bg-neon-green/10 transition-colors"
+                  title="Leaderboard"
+                >
+                  <Trophy className="w-3 h-3 text-neon-green" />
+                  <span className="text-xs text-neon-green uppercase tracking-wider">Ranks</span>
+                </motion.button>
+              )}
+
+              {/* GUIDE Button */}
+              {onOpenGuide && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onOpenGuide}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded border border-neon-pink/50 bg-terminal-bg/30 hover:bg-neon-pink/10 transition-colors"
+                  title="Game Guide"
+                >
+                  <HelpCircle className="w-3 h-3 text-neon-pink" />
+                  <span className="text-xs text-neon-pink uppercase tracking-wider">Guide</span>
+                </motion.button>
+              )}
+              
+              {isConnected && address ? (
+                <>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded border border-neon-cyan/50 bg-cyber-panel/50">
+                    <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
+                    <span className="text-xs text-neon-cyan font-mono">{formatAddress(address)}</span>
+                  </div>
+                  
+                  {onDisconnect && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={onDisconnect}
+                      className="flex items-center gap-1 px-2 py-1 rounded border border-neon-pink/50 bg-cyber-panel/50 hover:bg-neon-pink/20 transition-colors"
+                      title="Disconnect Wallet"
+                    >
+                      <LogOut className="w-3 h-3 text-neon-pink" />
+                    </motion.button>
+                  )}
+                </>
+              ) : (
+                onConnect && (
+                  <Button
+                    onClick={onConnect}
+                    disabled={isConnecting}
+                    size="sm"
+                    className="cyber-button bg-neon-cyan/20 hover:bg-neon-cyan/30 text-neon-cyan border border-neon-cyan text-xs uppercase tracking-wider font-cyber px-4 py-1 h-auto"
+                    style={{ boxShadow: '0 0 15px hsl(180 100% 50% / 0.3)' }}
+                  >
+                    <Wallet className="w-3 h-3 mr-1.5" />
+                    {isConnecting ? 'LINKING...' : 'CONNECT'}
+                  </Button>
+                )
+              )}
             </div>
           </div>
         </div>
