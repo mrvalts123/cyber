@@ -12,8 +12,8 @@
 import { isMetaMaskInstalled } from './wallet';
 
 // ApeChain NFT Contract Address
-// TODO: Set this to your new NFT contract address when ready
-export const NFT_CONTRACT_ADDRESS = ''; // Empty until new NFT contract is deployed
+// New Collection: Cyber Picks Collection (2000 tokens)
+export const NFT_CONTRACT_ADDRESS = '0xd9b3bf4300ec5ea96862e6f87cf4277277ce36c6';
 
 export interface NFTCartridge {
   tokenId: string;
@@ -235,15 +235,17 @@ async function getUserTokensFromExplorer(address: string): Promise<string[]> {
 /**
  * Get specific NFT token instances for a holder
  * Uses the NFT instances endpoint filtered by holder
+ * Optimized for large collections (2000+ tokens)
  */
 async function getTokenInstancesForHolder(address: string): Promise<string[]> {
   try {
-    console.log('[NFT] Fetching token instances for holder...');
+    console.log('[NFT] 🔍 Scanning token instances for holder...');
+    console.log('[NFT] 📦 Collection may contain up to 2000 tokens - this may take a moment...');
     
     const tokenIds: string[] = [];
     let nextPageParams: string | null = null;
     let pageCount = 0;
-    const maxPages = 20; // Support multiple pages
+    const maxPages = 100; // Support up to 100 pages (covers 2000+ tokens at 20-50 per page)
     
     do {
       pageCount++;
@@ -263,7 +265,7 @@ async function getTokenInstancesForHolder(address: string): Promise<string[]> {
       
       explorerUrl += `?${params.toString()}`;
       
-      console.log(`[NFT] Fetching instances page ${pageCount}...`);
+      console.log(`[NFT] 📄 Page ${pageCount}/${maxPages}...`);
       
       const response = await fetch(explorerUrl, {
         headers: {
@@ -273,7 +275,7 @@ async function getTokenInstancesForHolder(address: string): Promise<string[]> {
       });
       
       if (!response.ok) {
-        console.warn(`[NFT] Explorer instances API returned status: ${response.status}`);
+        console.warn(`[NFT] ⚠️  Explorer API returned status: ${response.status}`);
         const text = await response.text();
         console.warn('[NFT] Response:', text);
         break;
@@ -288,23 +290,28 @@ async function getTokenInstancesForHolder(address: string): Promise<string[]> {
             tokenIds.push(item.id);
           }
         }
-        console.log(`[NFT] Page ${pageCount}: found ${data.items.length} tokens (total: ${tokenIds.length})`);
+        console.log(`[NFT]   ✓ Found ${data.items.length} tokens (total: ${tokenIds.length})`);
       }
       
       // Check for next page
       nextPageParams = data.next_page_params;
       
-      // Small delay
+      // Rate limiting protection: delay between requests
       if (nextPageParams) {
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 300)); // 300ms delay = max 3 requests/sec
+      }
+      
+      // Progress update every 10 pages
+      if (pageCount % 10 === 0) {
+        console.log(`[NFT] 📊 Progress: Scanned ${pageCount} pages, found ${tokenIds.length} tokens so far...`);
       }
       
     } while (nextPageParams && pageCount < maxPages);
     
-    console.log(`[NFT] ✓ Found ${tokenIds.length} token instances for holder`);
+    console.log(`[NFT] ✨ Scan complete! Found ${tokenIds.length} token(s) owned by this wallet`);
     return tokenIds;
   } catch (error) {
-    console.error('[NFT] Token instances fetch failed:', error);
+    console.error('[NFT] ❌ Token scan failed:', error);
     return [];
   }
 }
@@ -332,11 +339,15 @@ export async function getUserNFTs(address: string): Promise<NFTCartridge[]> {
     console.log(`[NFT] ✓ Found ${tokenIds.length} tokens owned by this address`);
 
     // Fetch metadata for found tokens
-    console.log(`[NFT] Fetching metadata for ${tokenIds.length} tokens...`);
+    console.log(`[NFT] 🎨 Fetching metadata for ${tokenIds.length} token(s)...`);
     const cartridges: NFTCartridge[] = [];
     
-    // Limit to 5 ICE breakers max per wallet
+    // Limit to 5 ICE breakers max per wallet (show first 5)
     const limitedTokenIds = tokenIds.slice(0, 5);
+    
+    if (tokenIds.length > 5) {
+      console.log(`[NFT] ℹ️  Note: Wallet owns ${tokenIds.length} tokens, showing first 5 for gameplay`);
+    }
     
     for (let i = 0; i < limitedTokenIds.length; i++) {
       const tokenId = limitedTokenIds[i];
