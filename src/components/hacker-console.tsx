@@ -7,7 +7,7 @@
 
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Terminal, Zap, Shield, LogOut, Wallet, Trophy, HelpCircle } from 'lucide-react';
+import { Terminal, Zap, LogOut, Wallet, Trophy, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatAddress } from '@/lib/wallet';
 
@@ -61,15 +61,6 @@ export function HackerConsole({ children, controls, isConnected = false, address
             
             {/* Status Indicators */}
             <div className="flex items-center gap-3">
-              <motion.div
-                animate={{ opacity: [1, 0.5, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex items-center gap-1 px-3 py-1 rounded border border-neon-green/50 bg-terminal-bg/30"
-              >
-                <Shield className="w-3 h-3 text-neon-green" />
-                <span className="text-xs text-neon-green uppercase tracking-wider">Secure</span>
-              </motion.div>
-
               {/* RANKS Button */}
               {onOpenLeaderboard && (
                 <motion.button
