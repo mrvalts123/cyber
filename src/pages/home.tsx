@@ -222,57 +222,38 @@ function CyberMinerGame() {
 
             {/* Data Crack Progress Bar */}
             {(isMining || isReadyToClaim) && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-cyber-panel/70 backdrop-blur-sm rounded-lg p-4 border border-neon-cyan/40 relative overflow-hidden"
-                style={{ boxShadow: '0 0 20px hsl(180 100% 50% / 0.2), inset 0 0 15px rgba(0, 0, 0, 0.5)' }}
-              >
-                {/* Animated Background */}
-                {isMining && (
-                  <motion.div
-                    animate={{ x: ['-100%', '100%'] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/20 to-transparent"
-                  />
-                )}
-                
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      {isReadyToClaim ? (
-                        <Unlock className="w-4 h-4 text-neon-green animate-pulse" />
-                      ) : (
-                        <Lock className="w-4 h-4 text-neon-cyan" />
-                      )}
-                      <span className="text-xs text-terminal-text uppercase tracking-[0.15em] font-cyber">
-                        {isReadyToClaim ? 'Decryption Complete' : 'Breaking ICE'}
-                      </span>
-                    </div>
-                    <span className="text-sm text-neon-cyan font-bold font-cyber tracking-wider">
-                      {isMining ? `${Math.floor(miningProgress)}%` : '100%'}
+              <div className="bg-cyber-panel/70 rounded-lg p-4 border border-neon-cyan/40">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    {isReadyToClaim ? (
+                      <Unlock className="w-4 h-4 text-neon-green" />
+                    ) : (
+                      <Lock className="w-4 h-4 text-neon-cyan" />
+                    )}
+                    <span className="text-xs text-terminal-text uppercase tracking-[0.15em] font-cyber">
+                      {isReadyToClaim ? 'Decryption Complete' : 'Breaking ICE'}
                     </span>
                   </div>
-                  
-                  <div className="w-full h-3 bg-cyber-darker rounded-full overflow-hidden border border-neon-cyan/30">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-neon-cyan via-neon-green to-neon-cyan"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${miningProgress}%` }}
-                      transition={{ duration: 0.1 }}
-                      style={{ 
-                        boxShadow: '0 0 10px hsl(180 100% 50% / 0.8), inset 0 0 10px hsl(180 100% 50% / 0.5)' 
-                      }}
-                    />
-                  </div>
-                  
-                  {isMining && (
-                    <div className="text-xs text-terminal-dim mt-2 text-center font-mono">
-                      {Math.ceil((miningDuration * 1000 - (miningProgress * miningDuration * 10)) / 1000)}s remaining
-                    </div>
-                  )}
+                  <span className="text-sm text-neon-cyan font-bold font-cyber tracking-wider">
+                    {isMining ? `${Math.floor(miningProgress)}%` : '100%'}
+                  </span>
                 </div>
-              </motion.div>
+                
+                <div className="w-full h-3 bg-cyber-darker rounded-full overflow-hidden border border-neon-cyan/30">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-neon-cyan via-neon-green to-neon-cyan"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${miningProgress}%` }}
+                    transition={{ duration: 0.1 }}
+                  />
+                </div>
+                
+                {isMining && (
+                  <div className="text-xs text-terminal-dim mt-2 text-center font-mono">
+                    {Math.ceil((miningDuration * 1000 - (miningProgress * miningDuration * 10)) / 1000)}s remaining
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Terminal Section */}
