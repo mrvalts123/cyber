@@ -60,7 +60,7 @@ export function TerminalDisplay({
     }
   }, [logs, isMining]);
 
-  // Generate animated code lines during mining
+  // Generate animated code lines during mining (reduced frequency for performance)
   useEffect(() => {
     if (!isMining) {
       setCodeLines([]);
@@ -69,7 +69,7 @@ export function TerminalDisplay({
     }
 
     const codeInterval = setInterval(() => {
-      const newLines = Array.from({ length: 3 }, () => {
+      const newLines = Array.from({ length: 2 }, () => {
         const operations = [
           `0x${generateHexString(8)} >>> ${generateHexString(16)}`,
           `DECRYPT [${generateBinaryString(16)}] -> ${generateHexString(8)}`,
@@ -81,28 +81,13 @@ export function TerminalDisplay({
         return operations[Math.floor(Math.random() * operations.length)];
       });
       
-      setCodeLines(prev => [...newLines, ...prev].slice(0, 8));
-    }, 800);
+      setCodeLines(prev => [...newLines, ...prev].slice(0, 6));
+    }, 1500); // Reduced frequency for performance
 
-    // Generate flying data packets
-    const packetInterval = setInterval(() => {
-      const newPacket = {
-        id: Date.now(),
-        text: `[${generateHexString(4)}]`,
-        x: Math.random() * 80 + 10,
-      };
-      
-      setDataPackets(prev => [...prev, newPacket]);
-      
-      // Remove old packets after animation
-      setTimeout(() => {
-        setDataPackets(prev => prev.filter(p => p.id !== newPacket.id));
-      }, 2000);
-    }, 1200);
+    // Removed flying data packets for performance
 
     return () => {
       clearInterval(codeInterval);
-      clearInterval(packetInterval);
     };
   }, [isMining]);
 
@@ -151,6 +136,8 @@ export function TerminalDisplay({
         ref={scrollRef}
         className="flex-1 overflow-y-auto scrollbar-thin bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative"
       >
+        {/* Grid Pattern Overlay - Removed for performance */}
+        
         {/* Content Area - Hacking Panels at Top When Mining */}
         <div className="relative z-10 space-y-3">
           {/* Animated Hacking Overlay - At Top During Mining */}
@@ -200,15 +187,10 @@ export function TerminalDisplay({
                               className="h-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-green"
                               initial={{ width: 0 }}
                               animate={{ 
-                                width: `${item.progress}%`,
-                                opacity: [0.8, 1, 0.8]
+                                width: `${item.progress}%`
                               }}
                               transition={{ 
-                                width: { duration: 0.3 },
-                                opacity: { duration: 1.5, repeat: Infinity }
-                              }}
-                              style={{ 
-                                boxShadow: '0 0 8px hsl(150 100% 60% / 0.6)' 
+                                width: { duration: 0.3 }
                               }}
                             />
                           </div>
@@ -242,64 +224,32 @@ export function TerminalDisplay({
                 </div>
 
                 {/* Data Extraction Meter */}
-                <motion.div 
-                  className="bg-gradient-to-r from-cyber-panel/70 to-cyber-panel/50 border border-neon-pink/30 rounded-lg p-2 backdrop-blur-sm"
-                  animate={{
-                    borderColor: [
-                      'hsl(330 100% 60% / 0.3)',
-                      'hsl(330 100% 60% / 0.7)',
-                      'hsl(330 100% 60% / 0.3)',
-                    ]
-                  }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
+                <div 
+                  className="bg-gradient-to-r from-cyber-panel/70 to-cyber-panel/50 border border-neon-pink/30 rounded-lg p-2"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Zap className="w-3 h-3 text-neon-pink animate-pulse" />
+                      <Zap className="w-3 h-3 text-neon-pink" />
                       <span className="text-[9px] text-neon-pink uppercase tracking-wider font-cyber">
                         Data Extraction
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
                       {Array.from({ length: 8 }, (_, i) => (
-                        <motion.div
+                        <div
                           key={i}
-                          className="w-1 h-3 bg-neon-pink/30 rounded-full"
-                          animate={{
-                            height: miningProgress > (i * 12.5) ? [12, 16, 12] : 8,
+                          className="w-1 rounded-full transition-all duration-300"
+                          style={{
+                            height: miningProgress > (i * 12.5) ? '16px' : '8px',
                             backgroundColor: miningProgress > (i * 12.5) 
                               ? 'hsl(330 100% 60%)' 
                               : 'hsl(330 100% 60% / 0.3)',
-                          }}
-                          transition={{
-                            duration: 0.6,
-                            repeat: Infinity,
-                            delay: i * 0.1,
-                          }}
-                          style={{
-                            boxShadow: miningProgress > (i * 12.5) 
-                              ? '0 0 8px hsl(330 100% 60%)' 
-                              : 'none'
                           }}
                         />
                       ))}
                     </div>
                   </div>
-                </motion.div>
-
-                {/* Glitch Effect at Key Milestones */}
-                {(miningProgress >= 24.5 && miningProgress <= 25.5) ||
-                 (miningProgress >= 49.5 && miningProgress <= 50.5) ||
-                 (miningProgress >= 74.5 && miningProgress <= 75.5) ||
-                 (miningProgress >= 99.5) ? (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ duration: 0.3, repeat: 2 }}
-                    className="absolute inset-0 bg-neon-cyan/10 pointer-events-none"
-                    style={{ mixBlendMode: 'screen' }}
-                  />
-                ) : null}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
