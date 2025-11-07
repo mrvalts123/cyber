@@ -117,7 +117,7 @@ export function Leaderboard({
                         Leaderboard
                       </h2>
                       <p className="text-xs text-white/60 mt-0.5">
-                        Top MineBoy Players
+                        Top Players
                       </p>
                     </div>
                   </div>
@@ -155,7 +155,7 @@ export function Leaderboard({
                       </div>
                       <div className="text-right">
                         <div className="text-xs text-white/50 uppercase tracking-wider">
-                          Minecarts
+                          DATA
                         </div>
                         <div className="text-sm text-white font-bold">
                           {sortedEntries[currentUserRank - 1]?.minecart.toLocaleString()}
@@ -243,7 +243,7 @@ export function Leaderboard({
                                 <div className="flex items-center justify-end gap-1 text-neon-cyan">
                                   <Zap className="w-3 h-3" />
                                   <span className="text-xs uppercase tracking-wider">
-                                    Carts
+                                    DATA
                                   </span>
                                 </div>
                                 <div className="text-lg font-bold text-white mt-0.5">
