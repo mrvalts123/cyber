@@ -125,12 +125,12 @@ export function TerminalDisplay({
 
   return (
     <div className="h-full flex flex-col">
-      {/* Terminal Header with Dynamic Status */}
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-neon-cyan/30">
+      {/* Terminal Header with Gradient Accent Line */}
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-neon-cyan/30 relative gradient-accent">
         <div className="flex items-center gap-3">
           <TerminalIcon className="w-4 h-4 text-neon-cyan" />
-          <span className="text-xs text-terminal-text uppercase tracking-[0.2em] font-mono">
-            Data Stream
+          <span className="text-xs text-neon-cyan uppercase tracking-[0.2em] font-mono font-semibold">
+            DATA STREAM
           </span>
         </div>
         
@@ -187,10 +187,10 @@ export function TerminalDisplay({
         </div>
       </div>
 
-      {/* Terminal Output Container */}
+      {/* Terminal Output Container with Enhanced Depth */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto scrollbar-modern bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative"
+        className="flex-1 overflow-y-auto scrollbar-modern bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative module-shadow"
       >
         {/* Content Area - Hacking Panels at Top When Mining */}
         <div className="relative z-10 space-y-3">
@@ -315,23 +315,25 @@ export function TerminalDisplay({
                 const { icon: Icon, prefix } = getLogPrefix(log.type);
                 return (
                   <motion.div
-                    key={`${log.timestamp}-${index}`}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.2 }}
                     className="flex items-start gap-2"
                   >
                     <Icon className={`w-3 h-3 mt-0.5 flex-shrink-0 ${getLogColor(log.type)}`} />
-                    <div className={`text-xs font-mono ${getLogColor(log.type)} flex-1`}>
-                      <span className="text-terminal-dim">
+                    <div className={`text-xs flex-1`}>
+                      {/* Enhanced JetBrains Mono Styling */}
+                      <span className="text-terminal-dim/60 font-mono-modern font-normal">
                         [{new Date(log.timestamp).toLocaleTimeString()}]
                       </span>
                       {' '}
-                      <span className={getLogColor(log.type)}>
+                      <span className={`${getLogColor(log.type)} font-mono-modern font-semibold`}>
                         {prefix}
                       </span>
                       {' '}
-                      {log.message}
+                      <span className={`${getLogColor(log.type)} font-mono-modern`}>
+                        {log.message}
+                      </span>
                     </div>
                   </motion.div>
                 );
