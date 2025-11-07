@@ -2,23 +2,23 @@
  * TerminalDisplay Component
  * 
  * Cyberpunk terminal/console display for showing hacking logs and status messages.
- * Features Matrix-style green text, animated code streams, data visualizations,
- * and dynamic hacking effects during mining operations.
+ * Features color-coded logs (✅ success, ⚠️ warnings, ❌ errors, 🔵 info),
+ * monospaced font for authenticity, and dynamic hacking effects during mining operations.
  * 
  * Layout Strategy:
  * - During mining: Hacking panels (infiltration + data stream) appear at top
  * - Chat logs are positioned below the hacking panels for visibility
- * - When not mining: Regular chat log view only
+ * - When not mining: Regular chat log view only with color coding
  */
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Terminal as TerminalIcon, Lock, Shield, Cpu, Database, Zap } from 'lucide-react';
+import { Activity, Terminal as TerminalIcon, Lock, Shield, Cpu, Database, Zap, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 
 interface Log {
   timestamp: number;
   message: string;
-  type: 'info' | 'success' | 'error';
+  type: 'info' | 'success' | 'error' | 'warning';
 }
 
 interface TerminalDisplayProps {
@@ -50,7 +50,6 @@ export function TerminalDisplay({
 }: TerminalDisplayProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [codeLines, setCodeLines] = useState<string[]>([]);
-  const [dataPackets, setDataPackets] = useState<Array<{ id: number; text: string; x: number }>>([]);
 
   // Auto-scroll to bottom when new logs added (but NOT during mining)
   useEffect(() => {
@@ -64,7 +63,6 @@ export function TerminalDisplay({
   useEffect(() => {
     if (!isMining) {
       setCodeLines([]);
-      setDataPackets([]);
       return;
     }
 
@@ -82,62 +80,118 @@ export function TerminalDisplay({
       });
       
       setCodeLines(prev => [...newLines, ...prev].slice(0, 6));
-    }, 1500); // Reduced frequency for performance
-
-    // Removed flying data packets for performance
+    }, 1500);
 
     return () => {
       clearInterval(codeInterval);
     };
   }, [isMining]);
 
+  /**
+   * Get color-coded styles for log types
+   * ✅ Success: Green (cyan)
+   * ⚠️ Warning: Yellow
+   * ❌ Error: Red (pink)
+   * 🔵 Info: Blue (default terminal green)
+   */
   const getLogColor = (type: Log['type']) => {
     switch (type) {
       case 'success':
         return 'text-neon-cyan';
       case 'error':
         return 'text-neon-pink';
+      case 'warning':
+        return 'text-neon-yellow';
       default:
         return 'text-terminal-text';
     }
   };
 
+  /**
+   * Get icon and prefix for log types
+   */
   const getLogPrefix = (type: Log['type']) => {
     switch (type) {
       case 'success':
-        return '[✓]';
+        return { icon: CheckCircle, prefix: '[✓]' };
       case 'error':
-        return '[✗]';
+        return { icon: AlertTriangle, prefix: '[✗]' };
+      case 'warning':
+        return { icon: AlertTriangle, prefix: '[⚠]' };
       default:
-        return '[>]';
+        return { icon: Info, prefix: '[>]' };
     }
   };
 
   return (
     <div className="h-full flex flex-col">
-      {/* Terminal Header */}
+      {/* Terminal Header with Dynamic Status */}
       <div className="flex items-center justify-between mb-3 pb-2 border-b border-neon-cyan/30">
         <div className="flex items-center gap-3">
           <TerminalIcon className="w-4 h-4 text-neon-cyan" />
-          <span className="text-xs text-terminal-text uppercase tracking-[0.2em] font-cyber">
+          <span className="text-xs text-terminal-text uppercase tracking-[0.2em] font-mono">
             Data Stream
           </span>
         </div>
+        
+        {/* Dynamic Status Indicator with Pulsing Animation */}
         <div className="flex items-center gap-2">
-          <Activity className={`w-3 h-3 ${isMining ? 'text-neon-green animate-pulse' : 'text-terminal-dim'}`} />
-          <div className={`terminal-text text-xs uppercase tracking-wider font-bold ${isMining ? 'text-neon-green' : ''}`}>
+          <motion.div
+            animate={isMining ? {
+              scale: [1, 1.3, 1],
+              opacity: [0.6, 1, 0.6]
+            } : {
+              opacity: [0.4, 0.7, 0.4]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className={`w-2 h-2 rounded-full ${
+              isMining 
+                ? 'bg-neon-green' 
+                : status === 'READY TO EXTRACT'
+                  ? 'bg-neon-cyan'
+                  : status === 'STANDBY'
+                    ? 'bg-neon-yellow'
+                    : 'bg-cyber-border'
+            }`}
+            style={{
+              boxShadow: isMining 
+                ? '0 0 12px hsl(150 100% 60%), 0 0 24px hsl(150 100% 60% / 0.5)' 
+                : status === 'READY TO EXTRACT'
+                  ? '0 0 12px hsl(180 100% 50%)'
+                  : status === 'STANDBY'
+                    ? '0 0 10px hsl(45 100% 55%)'
+                    : 'none'
+            }}
+          />
+          <Activity className={`w-3 h-3 ${
+            isMining ? 'text-neon-green animate-pulse' : 'text-terminal-dim'
+          }`} />
+          <motion.div 
+            animate={isMining ? {
+              textShadow: [
+                '0 0 10px hsl(150 100% 60%)',
+                '0 0 20px hsl(150 100% 60%)',
+                '0 0 10px hsl(150 100% 60%)'
+              ]
+            } : {}}
+            transition={{ duration: 2, repeat: Infinity }}
+            className={`terminal-text text-xs uppercase tracking-wider font-bold font-mono ${
+              isMining ? 'text-neon-green' : 
+              status === 'READY TO EXTRACT' ? 'text-neon-cyan' :
+              status === 'STANDBY' ? 'text-neon-yellow' :
+              ''
+            }`}
+          >
             {status}
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Terminal Output Container */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto scrollbar-thin bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative"
+        className="flex-1 overflow-y-auto scrollbar-modern bg-terminal-bg/70 rounded-lg p-4 backdrop-blur-sm border border-neon-cyan/20 relative"
       >
-        {/* Grid Pattern Overlay - Removed for performance */}
-        
         {/* Content Area - Hacking Panels at Top When Mining */}
         <div className="relative z-10 space-y-3">
           {/* Animated Hacking Overlay - At Top During Mining */}
@@ -156,10 +210,10 @@ export function TerminalDisplay({
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Lock className="w-3 h-3 text-neon-green" />
-                    <span className="text-xs text-neon-green uppercase tracking-wider font-cyber">
+                    <span className="text-xs text-neon-green uppercase tracking-wider font-mono">
                       System Infiltration
                     </span>
-                    <span className="text-xs text-neon-green">
+                    <span className="text-xs text-neon-green font-mono">
                       {'>>>'}
                     </span>
                   </div>
@@ -206,7 +260,7 @@ export function TerminalDisplay({
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Cpu className="w-3 h-3 text-neon-cyan" />
-                    <span className="text-[9px] text-neon-cyan uppercase tracking-wider font-cyber">
+                    <span className="text-[9px] text-neon-cyan uppercase tracking-wider font-mono">
                       Live Data Stream
                     </span>
                   </div>
@@ -230,7 +284,7 @@ export function TerminalDisplay({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Zap className="w-3 h-3 text-neon-pink" />
-                      <span className="text-[9px] text-neon-pink uppercase tracking-wider font-cyber">
+                      <span className="text-[9px] text-neon-pink uppercase tracking-wider font-mono">
                         Data Extraction
                       </span>
                     </div>
@@ -254,28 +308,40 @@ export function TerminalDisplay({
             )}
           </AnimatePresence>
           
-          {/* Regular Log Output - Only Show When NOT Mining */}
+          {/* Regular Log Output with Color Coding */}
           {!isMining && (
-            <div>
-              {logs.map((log, index) => (
-                <div
-                  key={`${log.timestamp}-${index}`}
-                  className={`terminal-text text-xs mb-1.5 font-mono ${getLogColor(log.type)}`}
-                >
-                  <span className="text-terminal-dim">
-                    [{new Date(log.timestamp).toLocaleTimeString()}]
-                  </span>
-                  {' '}
-                  <span className={getLogColor(log.type)}>
-                    {getLogPrefix(log.type)}
-                  </span>
-                  {' '}
-                  {log.message}
-                </div>
-              ))}
+            <div className="space-y-1">
+              {logs.map((log, index) => {
+                const { icon: Icon, prefix } = getLogPrefix(log.type);
+                return (
+                  <motion.div
+                    key={`${log.timestamp}-${index}`}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-start gap-2"
+                  >
+                    <Icon className={`w-3 h-3 mt-0.5 flex-shrink-0 ${getLogColor(log.type)}`} />
+                    <div className={`text-xs font-mono ${getLogColor(log.type)} flex-1`}>
+                      <span className="text-terminal-dim">
+                        [{new Date(log.timestamp).toLocaleTimeString()}]
+                      </span>
+                      {' '}
+                      <span className={getLogColor(log.type)}>
+                        {prefix}
+                      </span>
+                      {' '}
+                      {log.message}
+                    </div>
+                  </motion.div>
+                );
+              })}
               
               {/* Blinking Cursor */}
-              <div className="terminal-text text-xs inline-block terminal-cursor" />
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-terminal-text text-xs font-mono">{'>'}</span>
+                <div className="terminal-text text-xs inline-block terminal-cursor" />
+              </div>
             </div>
           )}
         </div>
