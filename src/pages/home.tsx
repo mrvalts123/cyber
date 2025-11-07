@@ -291,7 +291,7 @@ function CyberMinerGame() {
           <div className="flex items-center justify-center gap-2 text-xs text-neon-cyan/60 font-mono">
             <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" 
                  style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
-            <span>ApeChain: 0xXXXX...XXXX</span>
+            <span>CYBERMINER @ APECHAIN</span>
           </div>
         </motion.div>
       </div>
