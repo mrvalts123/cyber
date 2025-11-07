@@ -525,8 +525,107 @@ export function ControlPad({
             </div>
           </motion.button>
         </div>
+
+        {/* Secondary Actions Row */}
+        <div className="mt-8 grid grid-cols-3 gap-4 relative z-10">
+          {/* Wallet Button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={isConnected ? onDisconnect : onConnect}
+            disabled={isConnecting}
+            className="relative group"
+          >
+            <div 
+              className="relative p-4 rounded-xl bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-purple-950/40 group-hover:from-purple-950/60 group-hover:via-purple-900/40 group-hover:to-purple-950/60 transition-all"
+              style={{
+                boxShadow: `
+                  0 4px 15px rgba(0, 0, 0, 0.6),
+                  inset 0 1px 15px rgba(0, 0, 0, 0.8)
+                `
+              }}
+            >
+              <div className="flex flex-col items-center gap-2">
+                <Wallet className="w-5 h-5 text-purple-400" />
+                <div className="text-xs text-purple-300 uppercase tracking-wide font-bold">
+                  {isConnecting ? 'Connecting...' : isConnected ? 'Disconnect' : 'Connect'}
+                </div>
+                {isConnected && (
+                  <div className="text-[9px] text-purple-400/60 font-mono">
+                    {formatAddress(address)}
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.button>
+
+          {/* Leaderboard Button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onOpenLeaderboard}
+            className="relative group"
+          >
+            <div 
+              className="relative p-4 rounded-xl bg-gradient-to-br from-yellow-950/40 via-yellow-900/20 to-yellow-950/40 group-hover:from-yellow-950/60 group-hover:via-yellow-900/40 group-hover:to-yellow-950/60 transition-all"
+              style={{
+                boxShadow: `
+                  0 4px 15px rgba(0, 0, 0, 0.6),
+                  inset 0 1px 15px rgba(0, 0, 0, 0.8)
+                `
+              }}
+            >
+              <div className="flex flex-col items-center gap-2">
+                <Trophy className="w-5 h-5 text-yellow-400" />
+                <div className="text-xs text-yellow-300 uppercase tracking-wide font-bold">
+                  Rankings
+                </div>
+              </div>
+            </div>
+          </motion.button>
+
+          {/* Guide Button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onOpenGuide}
+            className="relative group"
+          >
+            <div 
+              className="relative p-4 rounded-xl bg-gradient-to-br from-cyan-950/40 via-cyan-900/20 to-cyan-950/40 group-hover:from-cyan-950/60 group-hover:via-cyan-900/40 group-hover:to-cyan-950/60 transition-all"
+              style={{
+                boxShadow: `
+                  0 4px 15px rgba(0, 0, 0, 0.6),
+                  inset 0 1px 15px rgba(0, 0, 0, 0.8)
+                `
+              }}
+            >
+              <div className="flex flex-col items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-cyan-400" />
+                <div className="text-xs text-cyan-300 uppercase tracking-wide font-bold">
+                  Guide
+                </div>
+              </div>
+            </div>
+          </motion.button>
         </div>
 
+        {/* Scan Line Effect */}
+        <motion.div
+          animate={{
+            y: ['-100%', '200%'],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+          className="absolute inset-x-0 h-20 pointer-events-none z-20"
+          style={{
+            background: 'linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.05), transparent)',
+          }}
+        />
+      </div>
     </div>
   );
 }
