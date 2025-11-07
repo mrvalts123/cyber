@@ -219,11 +219,93 @@
       0 0 40px currentColor;
   }
 
-  /* Premium Card Designs */
+  /* Premium Card Designs with Enhanced Depth */
   .card-3d {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.3s ease;
+    /* Soft ambient shadows for depth */
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.12),
+      0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-3d:hover {
+    transform: rotateX(2deg) rotateY(5deg) translateZ(10px);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Module Shadow System - Professional Depth */
+  .module-shadow {
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 1px 2px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+
+  .module-shadow-md {
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      0 1px 4px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .module-shadow-lg {
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.18),
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Chip Container Style - Professional Card Design */
+  .chip-container {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* Center Spotlight Effect */
+  .center-spotlight::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, hsl(180 100% 50% / 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Gradient Accent Line */
+  .gradient-accent {
+    position: relative;
+  }
+
+  .gradient-accent::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(180 100% 50% / 0.6) 20%,
+      hsl(180 100% 50%) 50%,
+      hsl(180 100% 50% / 0.6) 80%,
+      transparent 100%
+    );
+    box-shadow: 0 0 8px hsl(180 100% 50% / 0.4);
   }
 
   .card-3d:hover {
