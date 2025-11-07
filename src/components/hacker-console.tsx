@@ -1,13 +1,14 @@
 /**
  * HackerConsole Component
  * 
- * Main cyberpunk hacker terminal UI component.
- * Renders the futuristic hacking console with screen, controls, and branding.
+ * Main cyberpunk hacker terminal UI component with worldbuilding elements.
+ * Features ghosted watermarks, CPU/GPU utilization, neural sync latency,
+ * and immersive cyberpunk lore throughout the interface.
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Terminal, Zap, LogOut, Wallet, Trophy, HelpCircle } from 'lucide-react';
+import { Terminal, Zap, LogOut, Wallet, Trophy, HelpCircle, Cpu, Activity, Network } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatAddress } from '@/lib/wallet';
 
@@ -24,6 +25,21 @@ interface HackerConsoleProps {
 }
 
 export function HackerConsole({ children, controls, isConnected = false, address = '', isConnecting = false, onConnect, onDisconnect, onOpenLeaderboard, onOpenGuide }: HackerConsoleProps) {
+  // Simulate CPU/GPU utilization for worldbuilding
+  const [cpuUsage, setCpuUsage] = useState(45);
+  const [gpuUsage, setGpuUsage] = useState(32);
+  const [latency, setLatency] = useState(12);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCpuUsage(prev => Math.max(20, Math.min(85, prev + (Math.random() - 0.5) * 10)));
+      setGpuUsage(prev => Math.max(15, Math.min(75, prev + (Math.random() - 0.5) * 12)));
+      setLatency(prev => Math.max(8, Math.min(45, prev + (Math.random() - 0.5) * 5)));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.div
       initial={{ scale: 0.95, opacity: 0 }}
@@ -33,6 +49,21 @@ export function HackerConsole({ children, controls, isConnected = false, address
     >
       {/* Main Cyber Panel */}
       <div className="cyber-panel rounded-lg p-6 shadow-2xl relative overflow-hidden">
+        {/* Ghosted Watermark Background - Worldbuilding */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
+          <div className="text-center transform rotate-[-15deg]">
+            <div className="text-6xl font-black tracking-widest text-neon-cyan uppercase font-display">
+              APECHAIN
+            </div>
+            <div className="text-2xl font-bold tracking-[0.3em] text-neon-cyan uppercase mt-2 font-mono">
+              SECURE NODE 2049
+            </div>
+            <div className="text-lg tracking-wider text-neon-green uppercase mt-1 font-mono">
+              NEURAL NETWORK v3.0
+            </div>
+          </div>
+        </div>
+
         {/* Animated Grid Background */}
         <div className="absolute inset-0 cyber-grid opacity-20 pointer-events-none" />
         
@@ -49,10 +80,10 @@ export function HackerConsole({ children, controls, isConnected = false, address
                 <Terminal className="w-5 h-5 text-neon-cyan" />
               </motion.div>
               <div>
-                <h1 className="text-2xl font-bold text-neon-cyan neon-text font-cyber tracking-wider">
+                <h1 className="text-2xl font-bold text-neon-cyan neon-text font-display tracking-wider">
                   CYBER MINER
                 </h1>
-                <div className="text-xs text-terminal-text uppercase tracking-widest flex items-center gap-2">
+                <div className="text-xs text-terminal-text uppercase tracking-widest flex items-center gap-2 font-mono">
                   <Zap className="w-3 h-3" />
                   <span>Neural Network v3.0</span>
                 </div>
@@ -74,7 +105,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                 <svg className="w-3 h-3 text-neon-cyan group-hover:text-neon-cyan transition-colors" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
-                <span className="text-xs text-neon-cyan uppercase tracking-wider group-hover:text-neon-cyan transition-colors">Follow</span>
+                <span className="text-xs text-neon-cyan uppercase tracking-wider group-hover:text-neon-cyan transition-colors font-mono">Follow</span>
               </motion.a>
               
               {/* RANKS Button */}
@@ -87,7 +118,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   title="Leaderboard"
                 >
                   <Trophy className="w-3 h-3 text-neon-green" />
-                  <span className="text-xs text-neon-green uppercase tracking-wider">Ranks</span>
+                  <span className="text-xs text-neon-green uppercase tracking-wider font-mono">Ranks</span>
                 </motion.button>
               )}
 
@@ -101,16 +132,37 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   title="Game Guide"
                 >
                   <HelpCircle className="w-3 h-3 text-neon-pink" />
-                  <span className="text-xs text-neon-pink uppercase tracking-wider">Guide</span>
+                  <span className="text-xs text-neon-pink uppercase tracking-wider font-mono">Guide</span>
                 </motion.button>
               )}
               
               {isConnected && address ? (
                 <>
-                  <div className="flex items-center gap-2 px-3 py-1 rounded border border-neon-cyan/50 bg-cyber-panel/50">
-                    <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
+                  <motion.div 
+                    animate={{ 
+                      boxShadow: [
+                        '0 0 10px hsl(180 100% 50% / 0.3)',
+                        '0 0 20px hsl(180 100% 50% / 0.5)',
+                        '0 0 10px hsl(180 100% 50% / 0.3)'
+                      ]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="flex items-center gap-2 px-3 py-1 rounded border border-neon-cyan/50 bg-cyber-panel/50"
+                  >
+                    <motion.div 
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        boxShadow: [
+                          '0 0 10px hsl(180 100% 50%)',
+                          '0 0 15px hsl(180 100% 50%)',
+                          '0 0 10px hsl(180 100% 50%)'
+                        ]
+                      }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="w-2 h-2 rounded-full bg-neon-cyan" 
+                    />
                     <span className="text-xs text-neon-cyan font-mono">{formatAddress(address)}</span>
-                  </div>
+                  </motion.div>
                   
                   {onDisconnect && (
                     <motion.button
@@ -130,7 +182,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                     onClick={onConnect}
                     disabled={isConnecting}
                     size="sm"
-                    className="cyber-button bg-neon-cyan/20 hover:bg-neon-cyan/30 text-neon-cyan border border-neon-cyan text-xs uppercase tracking-wider font-cyber px-4 py-1 h-auto"
+                    className="cyber-button bg-neon-cyan/20 hover:bg-neon-cyan/30 text-neon-cyan border border-neon-cyan text-xs uppercase tracking-wider font-mono px-4 py-1 h-auto"
                     style={{ boxShadow: '0 0 15px hsl(180 100% 50% / 0.3)' }}
                   >
                     <Wallet className="w-3 h-3 mr-1.5" />
@@ -138,6 +190,97 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   </Button>
                 )
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* System Metrics Bar - Worldbuilding Elements */}
+        <div className="relative z-10 mb-4">
+          <div className="flex items-center justify-between gap-4 bg-cyber-darker/50 rounded-lg px-4 py-2 border border-cyber-border/30">
+            {/* CPU Utilization */}
+            <div className="flex items-center gap-2">
+              <Cpu className="w-3 h-3 text-neon-cyan" />
+              <div className="text-[10px] font-mono">
+                <span className="text-terminal-dim/70 uppercase tracking-wider">CPU</span>
+                <span className="text-neon-cyan ml-1.5 font-bold">{cpuUsage.toFixed(0)}%</span>
+              </div>
+              <div className="flex gap-0.5 ml-1">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      height: cpuUsage > (i * 20) ? '12px' : '4px',
+                      backgroundColor: cpuUsage > (i * 20) 
+                        ? 'hsl(180 100% 50%)' 
+                        : 'hsl(180 100% 50% / 0.2)',
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="w-0.5 rounded-full"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* GPU Utilization */}
+            <div className="flex items-center gap-2">
+              <Activity className="w-3 h-3 text-neon-green" />
+              <div className="text-[10px] font-mono">
+                <span className="text-terminal-dim/70 uppercase tracking-wider">GPU</span>
+                <span className="text-neon-green ml-1.5 font-bold">{gpuUsage.toFixed(0)}%</span>
+              </div>
+              <div className="flex gap-0.5 ml-1">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      height: gpuUsage > (i * 20) ? '12px' : '4px',
+                      backgroundColor: gpuUsage > (i * 20) 
+                        ? 'hsl(150 100% 60%)' 
+                        : 'hsl(150 100% 60% / 0.2)',
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="w-0.5 rounded-full"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Neural Sync Latency */}
+            <div className="flex items-center gap-2">
+              <Network className="w-3 h-3 text-neon-purple" />
+              <div className="text-[10px] font-mono">
+                <span className="text-terminal-dim/70 uppercase tracking-wider">Latency</span>
+                <motion.span 
+                  animate={{
+                    color: latency < 15 ? 'hsl(150 100% 60%)' : latency < 30 ? 'hsl(45 100% 55%)' : 'hsl(0 100% 60%)'
+                  }}
+                  className="ml-1.5 font-bold"
+                >
+                  {latency.toFixed(0)}ms
+                </motion.span>
+              </div>
+              <motion.div
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className={`w-1.5 h-1.5 rounded-full ${
+                  latency < 15 ? 'bg-neon-green' : latency < 30 ? 'bg-neon-yellow' : 'bg-neon-pink'
+                }`}
+                style={{
+                  boxShadow: latency < 15 
+                    ? '0 0 8px hsl(150 100% 60%)' 
+                    : latency < 30 
+                      ? '0 0 8px hsl(45 100% 55%)'
+                      : '0 0 8px hsl(0 100% 60%)'
+                }}
+              />
+            </div>
+
+            {/* Node ID */}
+            <div className="text-[10px] font-mono text-terminal-dim/50 tracking-wider">
+              NODE_<span className="text-neon-cyan/60">APE-2049</span>
             </div>
           </div>
         </div>
@@ -160,20 +303,36 @@ export function HackerConsole({ children, controls, isConnected = false, address
           {controls}
         </div>
 
-        {/* Bottom Status Bar */}
+        {/* Bottom Status Bar with Enhanced Worldbuilding */}
         <div className="relative z-10 mt-6 pt-4 border-t border-cyber-border/30">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 text-terminal-dim text-xs uppercase tracking-wider">
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-2 h-2 rounded-full bg-neon-cyan"
-                style={{ boxShadow: '0 0 8px hsl(180 100% 50%)' }}
-              />
-              <span>System Active</span>
+            <div className="flex items-center gap-4">
+              {/* System Status */}
+              <div className="flex items-center gap-2 text-terminal-dim text-xs uppercase tracking-wider font-mono">
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    opacity: [0.6, 1, 0.6]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-2 h-2 rounded-full bg-neon-cyan"
+                  style={{ boxShadow: '0 0 8px hsl(180 100% 50%)' }}
+                />
+                <span>System Active</span>
+              </div>
+              
+              {/* Secure Connection Indicator */}
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-neon-green/70">
+                <div className="w-1.5 h-1.5 rounded-full bg-neon-green" 
+                     style={{ boxShadow: '0 0 6px hsl(150 100% 60%)' }} />
+                <span className="uppercase tracking-wider">Encrypted Link</span>
+              </div>
             </div>
-            <div className="text-terminal-dim text-xs uppercase tracking-widest">
-              ApeChain Network
+            
+            <div className="flex items-center gap-3 text-xs uppercase tracking-widest font-mono">
+              <span className="text-terminal-dim/70">ApeChain Network</span>
+              <span className="text-neon-cyan/50">•</span>
+              <span className="text-terminal-dim/50">Chain ID: 33139</span>
             </div>
           </div>
         </div>
@@ -186,7 +345,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
       </div>
 
       {/* Decorative Top Label */}
-      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-terminal-dim text-xs uppercase tracking-[0.3em] flex items-center gap-2">
+      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-terminal-dim text-xs uppercase tracking-[0.3em] flex items-center gap-2 font-mono">
         <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-neon-cyan" />
         <span>Web3 Neural Interface</span>
         <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-neon-cyan" />
