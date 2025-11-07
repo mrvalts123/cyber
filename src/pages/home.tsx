@@ -20,6 +20,8 @@ import { ClaimDialog } from '@/components/claim-dialog';
 import { Leaderboard } from '@/components/leaderboard';
 import { GameGuide } from '@/components/game-guide';
 import { WalletSelector } from '@/components/wallet-selector';
+import { AchievementBadge } from '@/components/achievement-badge';
+import { MiningHistory, type MiningHistoryEntry } from '@/components/mining-history';
 import { ComboDisplay } from '@/components/combo-display';
 // MintWidgetDialog removed - using direct instant minting now
 import { useMining } from '@/hooks/use-mining';
