@@ -23,21 +23,21 @@ interface StatsDisplayProps {
 export function StatsDisplay({ stats }: StatsDisplayProps) {
   const statItems = [
     {
-      label: '$DATA',
+      label: 'DATA',
       value: stats.minecart.toLocaleString(),
       icon: Database,
       color: 'text-neon-cyan',
       glow: 'shadow-neon-cyan',
     },
     {
-      label: 'MULT',
+      label: 'X',
       value: `${stats.multiplier.toFixed(1)}x`,
       icon: TrendingUp,
       color: 'text-neon-purple',
       glow: 'shadow-neon-purple',
     },
     {
-      label: 'CREDS',
+      label: 'POINTS',
       value: stats.seasonPoints.toLocaleString(),
       icon: Award,
       color: 'text-neon-green',
