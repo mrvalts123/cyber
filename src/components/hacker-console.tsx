@@ -54,7 +54,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                 </h1>
                 <div className="text-xs text-terminal-text uppercase tracking-widest flex items-center gap-2">
                   <Zap className="w-3 h-3" />
-                  <span>Neural Network v1.0</span>
+                  <span>Neural Network v3.0</span>
                 </div>
               </div>
             </div>
@@ -74,8 +74,8 @@ export function HackerConsole({ children, controls, isConnected = false, address
                 <svg className="w-3 h-3 text-neon-cyan group-hover:text-neon-cyan transition-colors" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
+                <span className="text-xs text-neon-cyan uppercase tracking-wider group-hover:text-neon-cyan transition-colors">Follow</span>
               </motion.a>
-
               
               {/* RANKS Button */}
               {onOpenLeaderboard && (
@@ -87,6 +87,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   title="Leaderboard"
                 >
                   <Trophy className="w-3 h-3 text-neon-green" />
+                  <span className="text-xs text-neon-green uppercase tracking-wider">Ranks</span>
                 </motion.button>
               )}
 
@@ -100,6 +101,7 @@ export function HackerConsole({ children, controls, isConnected = false, address
                   title="Game Guide"
                 >
                   <HelpCircle className="w-3 h-3 text-neon-pink" />
+                  <span className="text-xs text-neon-pink uppercase tracking-wider">Guide</span>
                 </motion.button>
               )}
               
