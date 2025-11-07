@@ -47,27 +47,28 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Cyberpunk Theme Colors
+        // Enhanced Cyberpunk Theme
         cyber: {
-          dark: "hsl(240 15% 6%)",
-          darker: "hsl(240 18% 3%)",
-          panel: "hsl(240 12% 10%)",
-          border: "hsl(180 100% 40%)",
-          "border-alt": "hsl(330 100% 50%)",
+          dark: "hsl(222 47% 4%)",
+          darker: "hsl(222 50% 3%)",
+          panel: "hsl(222 35% 10%)",
+          border: "hsl(180 100% 45%)",
+          "border-alt": "hsl(330 100% 55%)",
         },
         terminal: {
-          bg: "hsl(180 50% 5%)",
-          text: "hsl(150 100% 60%)",
+          bg: "hsl(222 45% 6%)",
+          text: "hsl(150 100% 65%)",
           bright: "hsl(150 100% 75%)",
-          dim: "hsl(150 50% 40%)",
+          dim: "hsl(150 50% 45%)",
         },
         neon: {
           cyan: "hsl(180 100% 50%)",
           pink: "hsl(330 100% 60%)",
           purple: "hsl(270 100% 60%)",
           green: "hsl(150 100% 60%)",
-          blue: "hsl(200 100% 50%)",
+          blue: "hsl(200 100% 55%)",
           orange: "hsl(30 100% 60%)",
+          yellow: "hsl(45 100% 55%)",
         },
       },
       borderRadius: {
@@ -76,8 +77,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        mono: ["'Courier New'", "Courier", "monospace"],
-        cyber: ["'Share Tech Mono'", "'Courier New'", "monospace"],
+        sans: ["'Inter'", "system-ui", "sans-serif"],
+        mono: ["'JetBrains Mono'", "'Courier New'", "monospace"],
+        display: ["'Orbitron'", "'Inter'", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -89,12 +91,24 @@ const config: Config = {
           to: { height: "0" },
         },
         glow: {
-          "0%, 100%": { opacity: "1", textShadow: "0 0 10px currentColor, 0 0 20px currentColor" },
-          "50%": { opacity: "0.8", textShadow: "0 0 20px currentColor, 0 0 40px currentColor" },
+          "0%, 100%": { 
+            opacity: "1", 
+            filter: "brightness(1)",
+          },
+          "50%": { 
+            opacity: "0.85", 
+            filter: "brightness(1.2)",
+          },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 10px currentColor, 0 0 20px currentColor, inset 0 0 10px currentColor" },
-          "50%": { boxShadow: "0 0 20px currentColor, 0 0 40px currentColor, inset 0 0 20px currentColor" },
+          "0%, 100%": { 
+            boxShadow: "0 0 20px currentColor",
+            opacity: "1"
+          },
+          "50%": { 
+            boxShadow: "0 0 40px currentColor",
+            opacity: "0.8"
+          },
         },
         blink: {
           "0%, 100%": { opacity: "1" },
@@ -112,14 +126,21 @@ const config: Config = {
           "45%": { opacity: "0.9" },
           "46%": { opacity: "1" },
         },
-        scanline: {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(100%)" },
+        shimmer: {
+          "0%, 100%": { backgroundPosition: "200% 0" },
+          "50%": { backgroundPosition: "-200% 0" },
         },
-        glitch: {
-          "0%, 100%": { transform: "translate(0)" },
-          "33%": { transform: "translate(-2px, 2px)" },
-          "66%": { transform: "translate(2px, -2px)" },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "slide-down": {
+          "0%": { transform: "translateY(-20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
       },
       animation: {
@@ -130,20 +151,27 @@ const config: Config = {
         blink: "blink 1s step-end infinite",
         "pulse-slow": "pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         flicker: "flicker 3s linear infinite",
-        scanline: "scanline 8s linear infinite",
-        glitch: "glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite",
+        shimmer: "shimmer 3s linear infinite",
+        float: "float 6s ease-in-out infinite",
+        "slide-up": "slide-up 0.4s ease-out",
+        "slide-down": "slide-down 0.4s ease-out",
       },
       boxShadow: {
-        "neon-cyan": "0 0 10px hsl(180 100% 50% / 0.5), 0 0 20px hsl(180 100% 50% / 0.3), 0 0 30px hsl(180 100% 50% / 0.2)",
-        "neon-pink": "0 0 10px hsl(330 100% 60% / 0.5), 0 0 20px hsl(330 100% 60% / 0.3), 0 0 30px hsl(330 100% 60% / 0.2)",
-        "neon-purple": "0 0 10px hsl(270 100% 60% / 0.5), 0 0 20px hsl(270 100% 60% / 0.3), 0 0 30px hsl(270 100% 60% / 0.2)",
-        "neon-green": "0 0 10px hsl(150 100% 60% / 0.5), 0 0 20px hsl(150 100% 60% / 0.3), 0 0 30px hsl(150 100% 60% / 0.2)",
-        "cyber-inset": "inset 0 0 20px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3)",
-        "cyber-panel": "0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+        "neon-cyan": "0 0 20px hsl(180 100% 50% / 0.5), 0 0 40px hsl(180 100% 50% / 0.3)",
+        "neon-pink": "0 0 20px hsl(330 100% 60% / 0.5), 0 0 40px hsl(330 100% 60% / 0.3)",
+        "neon-purple": "0 0 20px hsl(270 100% 60% / 0.5), 0 0 40px hsl(270 100% 60% / 0.3)",
+        "neon-green": "0 0 20px hsl(150 100% 60% / 0.5), 0 0 40px hsl(150 100% 60% / 0.3)",
+        "cyber-sm": "0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+        "cyber-md": "0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+        "cyber-lg": "0 20px 60px rgba(0, 0, 0, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.05)",
+        "cyber-inset": "inset 0 2px 20px rgba(0, 0, 0, 0.6), inset 0 -2px 10px rgba(0, 0, 0, 0.3)",
+        "glass": "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+        "3d": "0 10px 40px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
       },
       backgroundImage: {
-        "grid-pattern": "linear-gradient(hsl(180 100% 50% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(180 100% 50% / 0.1) 1px, transparent 1px)",
-        "cyber-gradient": "linear-gradient(135deg, hsl(180 100% 10%) 0%, hsl(240 15% 6%) 50%, hsl(330 100% 10%) 100%)",
+        "grid-pattern": "linear-gradient(hsl(180 100% 50% / 0.05) 1.5px, transparent 1.5px), linear-gradient(90deg, hsl(180 100% 50% / 0.05) 1.5px, transparent 1.5px)",
+        "cyber-gradient": "linear-gradient(135deg, hsl(222 35% 10%) 0%, hsl(222 47% 6%) 50%, hsl(232 35% 10%) 100%)",
+        "glass-gradient": "linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))",
       },
     },
   },
