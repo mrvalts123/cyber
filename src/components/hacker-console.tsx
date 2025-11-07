@@ -47,10 +47,15 @@ export function HackerConsole({ children, controls, isConnected = false, address
       transition={{ duration: 0.6 }}
       className="relative w-full max-w-4xl mx-auto"
     >
-      {/* Main Cyber Panel */}
-      <div className="cyber-panel rounded-lg p-6 shadow-2xl relative overflow-hidden">
+      {/* Main Cyber Panel with Center Spotlight */}
+      <div className="cyber-panel rounded-lg p-6 shadow-2xl relative overflow-hidden center-spotlight">
+        {/* Center Spotlight is added via CSS class */}
+        
+        {/* Signature Animation - Slow Rotating Ring */}
+        <div className="signature-ring" />
+        
         {/* Ghosted Watermark Background - Worldbuilding */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none z-0">
           <div className="text-center transform rotate-[-15deg]">
             <div className="text-6xl font-black tracking-widest text-neon-cyan uppercase font-display">
               APECHAIN
@@ -65,7 +70,19 @@ export function HackerConsole({ children, controls, isConnected = false, address
         </div>
 
         {/* Animated Grid Background */}
-        <div className="absolute inset-0 cyber-grid opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 cyber-grid opacity-20 pointer-events-none z-0" />
+        
+        {/* Matrix-style Data Pulses - Subtle Background Animation */}
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-px h-20 bg-gradient-to-b from-transparent via-neon-cyan/20 to-transparent pointer-events-none data-pulse"
+            style={{
+              left: `${20 + i * 20}%`,
+              animationDelay: `${i * 1.2}s`
+            }}
+          />
+        ))}
         
         {/* Top Branding Bar */}
         <div className="relative z-10 mb-6">
@@ -79,13 +96,43 @@ export function HackerConsole({ children, controls, isConnected = false, address
               >
                 <Terminal className="w-5 h-5 text-neon-cyan" />
               </motion.div>
-              <div>
-                <h1 className="text-2xl font-bold text-neon-cyan neon-text font-display tracking-wider">
+              <div className="relative">
+                {/* Title with Cyan Underline */}
+                <h1 className="text-2xl font-bold text-neon-cyan neon-text font-display tracking-wider relative inline-block">
                   CYBER MINER
+                  <div className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-60" />
                 </h1>
-                <div className="text-xs text-terminal-text uppercase tracking-widest flex items-center gap-2 font-mono">
+                <div className="text-xs text-terminal-text uppercase tracking-widest flex items-center gap-2 font-mono mt-2">
                   <Zap className="w-3 h-3" />
                   <span>Neural Network v3.0</span>
+                  {/* Pulsing Signal Dot */}
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.3, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-1.5 h-1.5 rounded-full bg-neon-green ml-1"
+                    style={{ boxShadow: '0 0 8px hsl(150 100% 60%)' }}
+                  />
+                  {/* Signal Strength Indicator */}
+                  <div className="flex gap-0.5 ml-1">
+                    {[...Array(4)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        animate={{
+                          height: ['8px', '12px', '8px'],
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          delay: i * 0.15,
+                        }}
+                        className="w-0.5 rounded-full bg-neon-green"
+                        style={{ opacity: 0.7 }}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -194,11 +241,11 @@ export function HackerConsole({ children, controls, isConnected = false, address
           </div>
         </div>
 
-        {/* System Metrics Bar - Worldbuilding Elements */}
+        {/* System Metrics Bar - Enhanced Chip Containers */}
         <div className="relative z-10 mb-4">
-          <div className="flex items-center justify-between gap-4 bg-cyber-darker/50 rounded-lg px-4 py-2 border border-cyber-border/30">
-            {/* CPU Utilization */}
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-3 bg-cyber-darker/50 rounded-lg p-3 border border-cyber-border/30 module-shadow">
+            {/* CPU Utilization - Chip Style */}
+            <div className="chip-container flex items-center gap-2">
               <Cpu className="w-3 h-3 text-neon-cyan" />
               <div className="text-[10px] font-mono">
                 <span className="text-terminal-dim/70 uppercase tracking-wider">CPU</span>
@@ -221,8 +268,8 @@ export function HackerConsole({ children, controls, isConnected = false, address
               </div>
             </div>
 
-            {/* GPU Utilization */}
-            <div className="flex items-center gap-2">
+            {/* GPU Utilization - Chip Style */}
+            <div className="chip-container flex items-center gap-2">
               <Activity className="w-3 h-3 text-neon-green" />
               <div className="text-[10px] font-mono">
                 <span className="text-terminal-dim/70 uppercase tracking-wider">GPU</span>
@@ -245,8 +292,8 @@ export function HackerConsole({ children, controls, isConnected = false, address
               </div>
             </div>
 
-            {/* Neural Sync Latency */}
-            <div className="flex items-center gap-2">
+            {/* Neural Sync Latency - Chip Style with Dynamic Colors */}
+            <div className="chip-container flex items-center gap-2">
               <Network className="w-3 h-3 text-neon-purple" />
               <div className="text-[10px] font-mono">
                 <span className="text-terminal-dim/70 uppercase tracking-wider">Latency</span>
@@ -278,16 +325,16 @@ export function HackerConsole({ children, controls, isConnected = false, address
               />
             </div>
 
-            {/* Node ID */}
-            <div className="text-[10px] font-mono text-terminal-dim/50 tracking-wider">
+            {/* Node ID - Chip Style */}
+            <div className="chip-container text-[10px] font-mono text-terminal-dim/50 tracking-wider">
               NODE_<span className="text-neon-cyan/60">APE-2049</span>
             </div>
           </div>
         </div>
 
-        {/* Main Screen Container */}
-        <div className="relative z-10 bg-cyber-darker rounded-lg p-4 mb-6 shadow-cyber-inset border border-cyber-border/50">
-          <div className="cyber-screen rounded-lg p-6 min-h-[450px] relative overflow-hidden">
+        {/* Main Screen Container with Enhanced Depth */}
+        <div className="relative z-10 bg-cyber-darker rounded-lg p-4 mb-6 shadow-cyber-inset border border-cyber-border/50 module-shadow-lg">
+          <div className="cyber-screen rounded-lg p-6 min-h-[450px] relative overflow-hidden module-shadow-md">
             {/* Corner Accents */}
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon-cyan" />
             <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-neon-cyan" />
@@ -307,18 +354,28 @@ export function HackerConsole({ children, controls, isConnected = false, address
         <div className="relative z-10 mt-6 pt-4 border-t border-cyber-border/30">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* System Status */}
-              <div className="flex items-center gap-2 text-terminal-dim text-xs uppercase tracking-wider font-mono">
+              {/* System Status - Dynamic Status Colors */}
+              <div className="flex items-center gap-2 text-xs uppercase tracking-wider font-mono">
                 <motion.div
                   animate={{ 
                     scale: [1, 1.3, 1],
                     opacity: [0.6, 1, 0.6]
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="w-2 h-2 rounded-full bg-neon-cyan"
-                  style={{ boxShadow: '0 0 8px hsl(180 100% 50%)' }}
+                  className={`w-2 h-2 rounded-full ${
+                    isConnected 
+                      ? 'bg-neon-green' 
+                      : 'bg-neon-yellow'
+                  }`}
+                  style={{ 
+                    boxShadow: isConnected 
+                      ? '0 0 8px hsl(150 100% 60%)' 
+                      : '0 0 8px hsl(45 100% 55%)'
+                  }}
                 />
-                <span>System Active</span>
+                <span className={isConnected ? 'text-neon-green' : 'text-neon-yellow'}>
+                  {isConnected ? 'CONNECTED' : 'IDLE'}
+                </span>
               </div>
               
               {/* Secure Connection Indicator */}
