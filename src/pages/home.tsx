@@ -20,9 +20,6 @@ import { ClaimDialog } from '@/components/claim-dialog';
 import { Leaderboard } from '@/components/leaderboard';
 import { GameGuide } from '@/components/game-guide';
 import { WalletSelector } from '@/components/wallet-selector';
-import { AchievementBadge } from '@/components/achievement-badge';
-import { MiningHistory, type MiningHistoryEntry } from '@/components/mining-history';
-import { ComboDisplay } from '@/components/combo-display';
 // MintWidgetDialog removed - using direct instant minting now
 import { useMining } from '@/hooks/use-mining';
 import { useCartridge } from '@/hooks/use-cartridge';
@@ -37,10 +34,6 @@ function CyberMinerGame() {
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isWalletSelectorOpen, setIsWalletSelectorOpen] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 });
-  
-  // Achievement & History state
-  const [currentAchievement, setCurrentAchievement] = useState<any>(null);
-  const [miningHistory, setMiningHistory] = useState<MiningHistoryEntry[]>([]);
   
   // Get window size for particles on mount
   useEffect(() => {
@@ -70,7 +63,6 @@ function CyberMinerGame() {
     miningDuration,
     stats,
     logs,
-    comboState,
     startMining,
     stopMining,
     claimReward,
@@ -103,12 +95,96 @@ function CyberMinerGame() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Cyberpunk Background Effects - Simplified for performance */}
+      {/* Cyberpunk Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Static Gradient Orbs */}
-        <div className="absolute top-20 left-20 w-96 h-96 bg-neon-cyan/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-[32rem] h-[32rem] bg-neon-pink/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-neon-purple/15 rounded-full blur-3xl" />
+        {/* Gradient Orbs */}
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2],
+            x: [0, 50, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          className="absolute top-20 left-20 w-96 h-96 bg-neon-cyan/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.4, 1],
+            opacity: [0.2, 0.4, 0.2],
+            x: [0, -30, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 3,
+          }}
+          className="absolute bottom-20 right-20 w-[32rem] h-[32rem] bg-neon-pink/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 6,
+          }}
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-neon-purple/15 rounded-full blur-3xl"
+        />
+
+        {/* Digital Rain Effect - Sparse */}
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-[2px] bg-gradient-to-b from-transparent via-neon-green/40 to-transparent"
+            style={{
+              left: `${Math.random() * 100}%`,
+              height: `${Math.random() * 100 + 50}px`,
+            }}
+            initial={{ y: -200, opacity: 0 }}
+            animate={{ 
+              y: ['0vh', '100vh'],
+              opacity: [0, 1, 0] 
+            }}
+            transition={{
+              duration: Math.random() * 3 + 2,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: 'linear',
+            }}
+          />
+        ))}
+
+        {/* Floating Particles */}
+        {[...Array(25)].map((_, i) => (
+          <motion.div
+            key={`particle-${i}`}
+            className={`absolute w-1 h-1 rounded-full ${
+              i % 3 === 0 ? 'bg-neon-cyan' : i % 3 === 1 ? 'bg-neon-pink' : 'bg-neon-green'
+            }`}
+            initial={{
+              x: Math.random() * windowSize.width,
+              y: Math.random() * windowSize.height,
+              opacity: 0,
+            }}
+            animate={{
+              y: [null, Math.random() * windowSize.height],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: Math.random() * 4 + 3,
+              repeat: Infinity,
+              delay: Math.random() * 3,
+            }}
+          />
+        ))}
       </div>
 
       {/* Main Hacker Console */}
@@ -141,9 +217,6 @@ function CyberMinerGame() {
         >
           {/* Screen Content */}
           <div className="h-full flex flex-col gap-4">
-            {/* Combo Display (when active) */}
-            <ComboDisplay comboState={comboState} />
-            
             {/* Stats Section */}
             <StatsDisplay stats={stats} />
 
@@ -183,34 +256,24 @@ function CyberMinerGame() {
               </div>
             )}
 
-            {/* Terminal & Mining History Section */}
-            <div className="flex-1 min-h-0 flex flex-col gap-4">
-              {/* Mining History (if has entries) */}
-              {miningHistory.length > 0 && (
-                <div className="flex-shrink-0">
-                  <MiningHistory entries={miningHistory} />
-                </div>
-              )}
-              
-              {/* Terminal */}
-              <div className="flex-1 min-h-0">
-                <TerminalDisplay
-                  logs={logs}
-                  status={
-                    isMining 
-                      ? 'CRACKING' 
-                      : isReadyToClaim
-                        ? 'READY TO EXTRACT'
-                        : isCartridgeLoaded 
-                          ? 'STANDBY' 
-                          : isConnected 
-                            ? 'NO ICE BREAKER' 
-                            : 'OFFLINE'
-                  }
-                  isMining={isMining}
-                  miningProgress={miningProgress}
-                />
-              </div>
+            {/* Terminal Section */}
+            <div className="flex-1 min-h-0">
+              <TerminalDisplay
+                logs={logs}
+                status={
+                  isMining 
+                    ? 'CRACKING' 
+                    : isReadyToClaim
+                      ? 'READY TO EXTRACT'
+                      : isCartridgeLoaded 
+                        ? 'STANDBY' 
+                        : isConnected 
+                          ? 'NO ICE BREAKER' 
+                          : 'OFFLINE'
+                }
+                isMining={isMining}
+                miningProgress={miningProgress}
+              />
             </div>
           </div>
         </HackerConsole>
@@ -225,17 +288,11 @@ function CyberMinerGame() {
           <p className="text-terminal-text text-sm uppercase tracking-[0.1em] font-cyber">
             Connect Neural Link • Load ICE Breaker • Execute Data Crack
           </p>
-          <p className="text-xs text-terminal-dim font-mono">
-            Duration: 5-60s random • Fee: 0.01 APE anonymizer cost
-          </p>
           <div className="flex items-center justify-center gap-2 text-xs text-neon-cyan/60 font-mono">
             <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" 
                  style={{ boxShadow: '0 0 10px hsl(180 100% 50%)' }} />
-            <span>ApeChain: 0x3322b37...c1d34d25</span>
+            <span>CYBERMINER @ APECHAIN</span>
           </div>
-          <p className="text-xs text-terminal-dim/60 font-mono">
-            💾 Stats auto-save to your wallet address
-          </p>
         </motion.div>
       </div>
 
@@ -260,7 +317,7 @@ function CyberMinerGame() {
         onClaim={claimReward}
       />
 
-      {/* Leaderboard Modal */}
+            {/* Leaderboard Modal */}
       <Leaderboard
         isOpen={isLeaderboardOpen}
         onClose={() => setIsLeaderboardOpen(false)}
@@ -283,12 +340,6 @@ function CyberMinerGame() {
       />
 
       {/* Mint Widget Dialog - Removed, using direct instant minting now */}
-      
-      {/* Achievement Badge Notification */}
-      <AchievementBadge
-        achievement={currentAchievement}
-        onClose={() => setCurrentAchievement(null)}
-      />
     </div>
   );
 }
