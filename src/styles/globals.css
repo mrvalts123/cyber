@@ -166,7 +166,7 @@
       0 0 40px hsl(180 100% 50% / 0.08);
   }
 
-  /* Modern Button Styles */
+  /* Modern Button Styles with Enhanced Micro-interactions */
   .btn-premium {
     position: relative;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
@@ -174,6 +174,86 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+  }
+
+  .btn-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .btn-premium:hover::before {
+    left: 100%;
+  }
+
+  .btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.4),
+      0 0 30px currentColor;
+    border-color: currentColor;
+  }
+
+  .btn-premium:active {
+    transform: translateY(0) scale(0.98);
+    transition: transform 80ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Button Ripple Effect */
+  @keyframes ripple {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ripple::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+  }
+
+  .btn-ripple:active::after {
+    animation: ripple 0.6s ease-out;
+  }
+
+  /* Slow Pulsating Glow for Premium Buttons */
+  .btn-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px currentColor;
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 35px currentColor;
+      opacity: 0.95;
+    }
   }
 
   .btn-premium::before {
@@ -426,6 +506,65 @@
   46% { opacity: 1; }
 }
 
+/* Signature Animation - Rotating Neon Ring */
+@keyframes rotate-ring {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.signature-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  border: 2px solid transparent;
+  border-top-color: hsl(180 100% 50% / 0.3);
+  border-right-color: hsl(180 100% 50% / 0.15);
+  border-radius: 50%;
+  animation: rotate-ring 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hexagon Pulse Animation */
+@keyframes hexagon-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+}
+
+.hexagon-pulse {
+  animation: hexagon-pulse 4s ease-in-out infinite;
+}
+
+/* Matrix-style Data Pulse */
+@keyframes data-pulse-vertical {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.data-pulse {
+  animation: data-pulse-vertical 6s linear infinite;
+}
 /* Stats Glow Animation */
 .stat-glow {
   animation: glow 2s ease-in-out infinite;
